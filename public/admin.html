@@ -1,0 +1,204 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#6E0A1A">
+<title>RSVP Register · Sai & Michael</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Serif+Telugu:wght@600&family=Cormorant+Upright:wght@600;700&family=EB+Garamond:wght@400;500&display=swap">
+<style>
+:root{--kumkuma:#A3122A;--deep:#6E0A1A;--sinduram:#E0531F;--pasupu:#E9A800;--soft:#F7D774;--paper:#FFF6DC;--paper2:#FCEBB8;--ink:#4A1A10;--muted:#7A3B24;--ok:#2F6B22}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html,body{background:var(--paper)}
+body{margin:0;color:var(--ink);font-family:"EB Garamond",Georgia,serif;font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%;
+  padding:0 max(16px,env(safe-area-inset-right)) max(32px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left))}
+header{background:var(--kumkuma);color:var(--paper);margin:0 calc(-1 * max(16px,env(safe-area-inset-left)));padding:18px max(16px,env(safe-area-inset-left));
+  border-bottom:4px solid var(--pasupu);display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+header h1{margin:0;font-family:"Cormorant Upright",Georgia,serif;font-size:26px;line-height:1.1}
+header .te{font-family:"Noto Serif Telugu",serif;font-size:14px;color:var(--soft)}
+main{max-width:1100px;margin:22px auto 0;display:flex;flex-direction:column;gap:20px}
+.btn{-webkit-appearance:none;appearance:none;font:inherit;font-size:15px;padding:9px 16px;min-height:42px;border-radius:999px;border:2px solid var(--kumkuma);
+  background:var(--paper);color:var(--kumkuma);cursor:pointer}
+.btn.solid{background:var(--kumkuma);color:var(--paper)}
+header .btn{border-color:var(--soft);background:transparent;color:var(--paper)}
+.btn:focus-visible{outline:3px solid var(--sinduram);outline-offset:2px}
+.btn[disabled]{opacity:.6;cursor:progress}
+.card{background:#FFFBEA;border:1.5px solid var(--pasupu);border-radius:6px;padding:18px}
+.signin{max-width:440px;margin:40px auto;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px}
+.stat{background:#FFFBEA;border:1.5px solid var(--pasupu);border-radius:6px;padding:14px}
+.stat b{display:block;font-family:"Cormorant Upright",Georgia,serif;font-size:36px;line-height:1;color:var(--kumkuma);font-variant-numeric:tabular-nums}
+.stat span{font-size:13px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.tools input{font:inherit;padding:8px 12px;border:1.5px solid #D9B25A;border-radius:4px;background:var(--paper);min-width:0;flex:1 1 200px;font-size:16px}
+.tablewrap{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1.5px solid var(--pasupu);border-radius:6px;background:#FFFBEA}
+table{border-collapse:collapse;width:100%;min-width:760px;font-size:15px}
+th,td{text-align:left;padding:9px 10px;border-bottom:1px solid #EFD9A0;vertical-align:top}
+th{background:var(--paper2);font-weight:500;position:sticky;top:0}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-size:13px}
+.pill.yes{background:#E3F0D8;color:var(--ok)}
+.pill.no{background:#F6DADB;color:var(--kumkuma)}
+.mail{font-size:12.5px;color:var(--muted)}
+.msg{font-size:15px}
+.msg.bad{color:var(--kumkuma)}
+.confirm p{margin:0 0 10px}
+.wa{display:inline-block;padding:4px 12px;border-radius:999px;background:#1F7A3F;color:#fff;text-decoration:none;font-size:14px;white-space:nowrap}
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>RSVP Register</h1>
+    <div class="te">కరోతు వారి వివాహం · 6 November 2026</div>
+  </div>
+  <div class="tools" id="who" hidden>
+    <span id="whoEmail"></span>
+    <button class="btn" type="button" id="signOutBtn">Sign out</button>
+  </div>
+</header>
+
+<main>
+  <section class="card signin" id="signinCard">
+    <p>Sign in with the Google account that was added as a host.</p>
+    <button class="btn solid" type="button" id="signInBtn">Sign in with Google</button>
+    <div class="msg bad" id="signinMsg" role="alert"></div>
+  </section>
+
+  <section id="dash" hidden>
+    <div class="stats" id="stats">
+      <div class="stat"><b id="s-guests">0</b><span>Guests coming</span></div>
+      <div class="stat"><b id="s-adults">0</b><span>Adults</span></div>
+      <div class="stat"><b id="s-kids">0</b><span>Children</span></div>
+      <div class="stat"><b id="s-yes">0</b><span>Families attending</span></div>
+      <div class="stat"><b id="s-no">0</b><span>Declined</span></div>
+    </div>
+  </section>
+
+  <section id="dash2" hidden style="display:flex;flex-direction:column;gap:12px">
+    <div class="tools">
+      <input type="search" id="filter" placeholder="Search name or phone" aria-label="Search RSVPs">
+      <button class="btn" type="button" id="refreshBtn">Refresh</button>
+      <button class="btn" type="button" id="csvBtn">Download CSV</button>
+      <a class="btn solid" id="remindLink" href="#" target="_blank" rel="noopener" style="text-decoration:none;display:inline-flex;align-items:center">Send reminders now (GitHub)</a>
+    </div>
+    <div class="msg" id="toolMsg" role="status"></div>
+    <div class="tablewrap">
+      <table>
+        <thead><tr><th>Name</th><th>Reply</th><th class="num">Adults</th><th class="num">Children</th><th>Mobile</th><th>Note</th><th>Replied</th><th>Texts</th><th>WhatsApp</th></tr></thead>
+        <tbody id="rows"><tr><td colspan="9">Loading…</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<script src="js/config.js"></script>
+<script src="js/fb-admin.js"></script>
+<script>
+(function(){
+  "use strict";
+  function $(id){ return document.getElementById(id); }
+  var app = FB.initializeApp(window.FIREBASE_CONFIG);
+  var db = FB.getFirestore(app);
+  var auth = FB.getAuth(app);
+  var all = [];
+  if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/wedding-reminder.yml';
+
+  function fmt(ts){
+    if (!ts || !ts.toDate) return '';
+    return ts.toDate().toLocaleString('en-US', {month:'short', day:'numeric', hour:'numeric', minute:'2-digit', timeZone:'America/New_York'});
+  }
+  function pretty(e){ var m = /^\+1(\d{3})(\d{3})(\d{4})$/.exec(e || ''); return m ? '(' + m[1] + ') ' + m[2] + '-' + m[3] : (e || ''); }
+  function td(text, cls){ var c = document.createElement('td'); if (cls) c.className = cls; c.textContent = text == null ? '' : String(text); return c; }
+  function guestLine(r){ var a = r.adults||0, k = r.kids||0; var t = a + ' adult' + (a===1?'':'s'); if (k) t += ' and ' + k + ' child' + (k===1?'':'ren'); return t; }
+  function waText(r){
+    return 'Namaskaram ' + r.name + ' garu 🙏\nA gentle reminder: Sai Keerthana & Michael\'s wedding is tomorrow, Friday 6 November 2026 at 6:00 PM, Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale, GA 30274.\nWe have you down for ' + guestLine(r) + '. See you there!\n– Karothu family';
+  }
+  function textStatus(r){
+    if (!r.smsOptIn) return 'No texts (not ticked)';
+    var s = r.smsConfirmationSentAt ? 'Confirmation ✓' : (r.smsError ? 'Failed: ' + r.smsError : 'Confirmation pending');
+    if (r.attending) s += r.smsReminderSentAt ? ' · Reminder ✓' : '';
+    return s;
+  }
+
+  function render(){
+    var q = $('filter').value.trim().toLowerCase(), qd = q.replace(/\D/g,'');
+    var rows = all.filter(function(r){ return !q || String(r.name||'').toLowerCase().indexOf(q) !== -1 || (qd && String(r.phone||'').indexOf(qd) !== -1); });
+    var tb = $('rows'); tb.innerHTML = '';
+    if (!rows.length){ var tr0 = document.createElement('tr'); var c0 = td(all.length ? 'No matches.' : 'No RSVPs yet.'); c0.colSpan = 9; tr0.appendChild(c0); tb.appendChild(tr0); }
+    rows.forEach(function(r){
+      var tr = document.createElement('tr');
+      tr.appendChild(td(r.name));
+      var reply = document.createElement('td'); var p = document.createElement('span');
+      p.className = 'pill ' + (r.attending ? 'yes' : 'no'); p.textContent = r.attending ? 'Attending' : 'Declined'; reply.appendChild(p); tr.appendChild(reply);
+      tr.appendChild(td(r.attending ? r.adults : '', 'num'));
+      tr.appendChild(td(r.attending ? r.kids : '', 'num'));
+      tr.appendChild(td(pretty(r.phone)));
+      tr.appendChild(td(r.note || ''));
+      tr.appendChild(td(fmt(r.submittedAt)));
+      tr.appendChild(td(textStatus(r), 'mail'));
+      var w = document.createElement('td');
+      if (r.attending && r.phone){ var a = document.createElement('a'); a.className = 'wa'; a.target = '_blank'; a.rel = 'noopener';
+        a.href = 'https://wa.me/' + r.phone.replace(/\D/g,'') + '?text=' + encodeURIComponent(waText(r)); a.textContent = 'WhatsApp reminder'; w.appendChild(a); }
+      tr.appendChild(w);
+      tb.appendChild(tr);
+    });
+    var yes = all.filter(function(r){ return r.attending; });
+    var adults = yes.reduce(function(s,r){ return s + (r.adults||0); }, 0);
+    var kids = yes.reduce(function(s,r){ return s + (r.kids||0); }, 0);
+    $('s-guests').textContent = adults + kids; $('s-adults').textContent = adults; $('s-kids').textContent = kids;
+    $('s-yes').textContent = yes.length; $('s-no').textContent = all.length - yes.length;
+  }
+
+  function say(t, bad){ $('toolMsg').className = bad ? 'msg bad' : 'msg'; $('toolMsg').textContent = t; }
+  function load(){
+    say('');
+    return FB.getDocs(FB.query(FB.collection(db, 'rsvps'), FB.orderBy('submittedAt', 'desc'))).then(function(snap){
+      all = snap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
+      render();
+    }).catch(function(e){
+      console.error(e); $('rows').innerHTML = '';
+      say(e && e.code === 'permission-denied'
+        ? 'This Google account is not on the host list. Add it in the Firestore rules (Firebase console → Firestore → Rules).'
+        : 'Could not load RSVPs. Check your connection and press Refresh.', true);
+    });
+  }
+
+  function csvCell(v){ v = v == null ? '' : String(v); return /[",\n]/.test(v) ? '"' + v.replace(/"/g,'""') + '"' : v; }
+  $('csvBtn').addEventListener('click', function(){
+    var head = ['Name','Mobile','Attending','Adults','Children','Texts OK','Note','Replied (ET)'];
+    var lines = [head.join(',')].concat(all.map(function(r){
+      return [r.name, pretty(r.phone), r.attending ? 'Yes' : 'No', r.attending ? r.adults : 0, r.attending ? r.kids : 0, r.smsOptIn ? 'Yes' : 'No', r.note, fmt(r.submittedAt)].map(csvCell).join(',');
+    }));
+    var blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sai-michael-rsvps.csv';
+    document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
+  });
+
+  $('refreshBtn').addEventListener('click', load);
+  $('filter').addEventListener('input', render);
+
+  $('signInBtn').addEventListener('click', function(){
+    var provider = new FB.GoogleAuthProvider();
+    $('signinMsg').textContent = '';
+    FB.signInWithPopup(auth, provider).catch(function(e){
+      if (e && (e.code === 'auth/popup-blocked' || e.code === 'auth/operation-not-supported-in-this-environment')) return FB.signInWithRedirect(auth, provider);
+      if (e && e.code !== 'auth/popup-closed-by-user' && e.code !== 'auth/cancelled-popup-request') $('signinMsg').textContent = 'Sign-in failed: ' + (e.message || e.code);
+    });
+  });
+  FB.getRedirectResult(auth).catch(function(e){ $('signinMsg').textContent = 'Sign-in failed: ' + (e.message || e.code); });
+  $('signOutBtn').addEventListener('click', function(){ FB.signOut(auth); });
+
+  FB.onAuthStateChanged(auth, function(user){
+    var signed = !!user;
+    $('signinCard').hidden = signed; $('dash').hidden = !signed; $('dash2').hidden = !signed; $('who').hidden = !signed;
+    if (signed){ $('whoEmail').textContent = user.email; load(); } else { all = []; }
+  });
+})();
+</script>
+</body>
+</html>
