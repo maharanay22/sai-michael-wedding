@@ -1,0 +1,46 @@
+name: RSVP confirmation texts
+
+on:
+  schedule:
+    # Every 10 minutes from about 8 AM to midnight Eastern (times are UTC).
+    - cron: "3-59/10 0-3,12-23 * * *"
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Only list who would be texted (send nothing)"
+        type: boolean
+        default: true
+
+concurrency:
+  group: text-confirmations
+  cancel-in-progress: false
+
+jobs:
+  text:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Stop after the wedding
+        id: gate
+        run: |
+          if [ "$(date -u +%Y%m%d)" -le "20261106" ]; then echo "go=yes" >> "$GITHUB_OUTPUT"; else echo "The wedding is over. Disable this workflow in the Actions tab."; fi
+      - uses: actions/checkout@v4
+        if: steps.gate.outputs.go == 'yes'
+      - uses: actions/setup-node@v4
+        if: steps.gate.outputs.go == 'yes'
+        with:
+          node-version: 22
+      - name: Send confirmation texts
+        if: steps.gate.outputs.go == 'yes'
+        working-directory: notify
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          SITE_URL: ${{ vars.SITE_URL }}
+          TWILIO_ACCOUNT_SID: ${{ secrets.TWILIO_ACCOUNT_SID }}
+          TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
+          TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
+          TWILIO_MESSAGING_SERVICE_SID: ${{ secrets.TWILIO_MESSAGING_SERVICE_SID }}
+          MAX_CONFIRMATION_TEXTS: ${{ vars.MAX_CONFIRMATION_TEXTS || '300' }}
+          DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+        run: |
+          npm install --no-audit --no-fund
+          node send-text-confirmations.mjs
