@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>SMS Opt-in · Sai Keerthana & Michael Wedding</title><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Upright:wght@600&family=EB+Garamond:wght@400;600&display=swap"><style>
+:root{--k:#A3122A;--deep:#6E0A1A;--p:#E9A800;--paper:#FFF6DC;--ink:#4A1A10;--muted:#7A3B24}
+*{box-sizing:border-box}html{background:var(--deep)}
+body{margin:0;padding:24px max(16px,env(safe-area-inset-right)) 40px max(16px,env(safe-area-inset-left));font:17px/1.6 "EB Garamond",Georgia,serif;color:var(--ink);-webkit-text-size-adjust:100%}
+main{max-width:720px;margin:0 auto;background:var(--paper);border:3px solid var(--p);outline:5px solid var(--k);padding:28px clamp(18px,5vw,40px)}
+h1{font-family:"Cormorant Upright",Georgia,serif;color:var(--k);font-size:34px;line-height:1.15;margin:0 0 4px}
+h2{color:var(--k);font-size:21px;margin:26px 0 6px}
+p,li{max-width:65ch}.meta{color:var(--muted);font-size:15px;margin:0 0 18px}
+a{color:var(--k)}.back{display:inline-block;margin-top:24px}
+b.key{background:#FCEBB8;padding:0 4px}
+
+.form{border:2px solid var(--p);border-radius:8px;padding:16px 18px;background:#fff;margin:14px 0}
+.form label{display:block;font-weight:600;margin:10px 0 4px}
+.form .in{border:1px solid #c9a86a;border-radius:4px;padding:8px 10px;color:#9a8a7a;background:#fffdf6}
+.opt{display:flex;gap:10px;align-items:flex-start;margin:14px 0 4px;font-weight:400}
+.box{flex:none;width:20px;height:20px;border:2px solid var(--k);border-radius:3px;background:#fff;margin-top:3px}
+.opt small{display:block;font-size:15px;color:var(--ink);margin-top:4px}
+img{max-width:100%;height:auto;border:1px solid var(--p);border-radius:6px}
+</style></head><body><main>
+<h1>SMS Opt-in (Text Message Consent)</h1>
+<p class="meta">Sai Keerthana &amp; Michael Wedding RSVP texts · operated by Suresh Karothu (Karothu Family)</p>
+
+<h2>How guests opt in</h2>
+<ol>
+<li>A guest opens the wedding invitation website: <a href="https://maharanay22.github.io/sai-michael-wedding/">https://maharanay22.github.io/sai-michael-wedding/</a></li>
+<li>They scroll to the RSVP form (<a href="https://maharanay22.github.io/sai-michael-wedding/#rsvp">#rsvp</a>) and enter their name, mobile number and whether they will attend.</li>
+<li>Below the mobile number is an <b>optional checkbox that is unticked by default</b>. Texts are sent only if the guest ticks it. Guests can RSVP without ticking it.</li>
+</ol>
+
+<h2>The RSVP form and the exact consent wording</h2>
+<div class="form" aria-label="Copy of the RSVP form">
+  <label>Your name</label><div class="in">Your full name</div>
+  <label>Mobile number</label><div class="in">(404) 555-0123</div>
+  <div class="opt"><span class="box" aria-label="unticked checkbox"></span>
+  <span><b>Text me</b> a confirmation and a reminder the day before.
+  <small>By ticking this box, you agree to receive up to 3 texts from Suresh Karothu (Karothu Family) about this wedding only: an RSVP confirmation and a reminder. Consent is optional. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="privacy.html">Privacy Policy</a> and <a href="terms.html">Terms &amp; Conditions</a>.</small></span></div>
+  <label>Will you attend?</label><div class="in">○ Joyfully attending &nbsp; ○ Regretfully can't attend</div>
+</div>
+
+<h2>Screenshot of the live form</h2>
+<p><img src="sms-optin.png" alt="Screenshot of the RSVP form showing the unticked SMS consent checkbox and wording"></p>
+
+<h2>Messages sent</h2>
+<ul>
+<li>One RSVP confirmation, sent automatically within about 10 minutes of the RSVP.</li>
+<li>One event reminder on November 5, 2026.</li>
+<li>At most 3 messages per number. The program ends November 6, 2026.</li>
+</ul>
+<p>Reply <b>STOP</b> to opt out at any time, or <b>HELP</b> for help. Message &amp; data rates may apply. Opt-in data is never sold or shared with third parties for marketing. Help: call or text (678) 431-6990.</p>
+<p><a href="privacy.html">Privacy Policy</a> · <a href="terms.html">Terms &amp; Conditions</a> · <a class="back" href="./">Back to the invitation</a></p>
+</main></body></html>
