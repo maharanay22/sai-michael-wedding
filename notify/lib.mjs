@@ -41,9 +41,10 @@ export function segments(text) {
   return len <= single ? 1 : Math.ceil(len / multi);
 }
 
-export async function sendSms(to, body) {
+export async function sendSms(to, body, mediaUrl) {
   const sid = process.env.TWILIO_ACCOUNT_SID;
   const form = new URLSearchParams({ To: to, Body: body });
+  if (mediaUrl) form.set("MediaUrl", mediaUrl); // picture message (MMS): colorful card + text
   if (process.env.TWILIO_MESSAGING_SERVICE_SID) form.set("MessagingServiceSid", process.env.TWILIO_MESSAGING_SERVICE_SID);
   else form.set("From", process.env.TWILIO_FROM);
   const res = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
@@ -59,14 +60,19 @@ export async function sendSms(to, body) {
   return json.sid;
 }
 
-// Text messages. Plain characters only (no emoji or Telugu) so each stays 1–2 segments and cheap.
+// Picture messages (MMS): a colorful card image plus a short text with emoji. MMS is priced per message, so emoji cost nothing extra.
+export const MEDIA = {
+  confirmYes: SITE_URL ? SITE_URL + "/card-confirmed.jpg" : "",
+  confirmNo: SITE_URL ? SITE_URL + "/photo-video-cover.jpg" : "",
+  reminder: SITE_URL ? SITE_URL + "/card-reminder.jpg" : "",
+};
 export const TEXTS = {
   confirmYes: (r) =>
-    `Maha Yadavalli - Sai & Michael Wedding: Thank you, ${first(r.name)}! Your RSVP for Sai Keerthana & Michael's wedding is confirmed for ${guestLine(r)}. Fri Nov 6, 6:00 PM, Hindu Temple of Atlanta, Riverdale GA. Reply STOP to opt out.`,
+    `Suresh Karothu (Karothu Family): 🙏 Namaskaram ${first(r.name)}! Your RSVP is confirmed for ${guestLine(r)} 🌸\n\nSai Keerthana & Michael's wedding\n📅 Fri, Nov 6 · 6:00 PM\n🛕 Hindu Temple of Atlanta, Riverdale GA\n\nWe look forward to your blessings! 🪔\nReply STOP to opt out.`,
   confirmNo: (r) =>
-    `Maha Yadavalli - Sai & Michael Wedding: Thank you for letting us know, ${first(r.name)}. We will miss you at Sai Keerthana & Michael's wedding. Reply STOP to opt out.`,
+    `Suresh Karothu (Karothu Family): 🙏 Thank you for letting us know, ${first(r.name)}. We will miss you at Sai Keerthana & Michael's wedding and are grateful for your blessings 🌸\nReply STOP to opt out.`,
   reminder: (r) =>
-    `Maha Yadavalli - Sai & Michael Wedding: Reminder - Sai Keerthana & Michael's wedding is TOMORROW, Fri Nov 6 at 6:00 PM. Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale GA 30274.${SITE_URL ? " " + SITE_URL : ""} Reply STOP to opt out.`,
+    `Suresh Karothu (Karothu Family): 🪔 See you tomorrow! 🪔\n\nSai Keerthana & Michael's wedding is TOMORROW\n📅 Fri, Nov 6 · Muhurtham 6:00 PM\n🛕 Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale GA 30274\n👥 ${guestLine(r)}${SITE_URL ? "\n🔗 " + SITE_URL : ""}\n\nReply STOP to opt out.`,
 };
 function first(name) {
   return String(name || "").trim().split(/\s+/)[0].slice(0, 20) || "friend";

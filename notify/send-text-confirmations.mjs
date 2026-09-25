@@ -1,6 +1,6 @@
 // Texts a confirmation to guests who ticked "Text me" and haven't had one yet.
 // Run every 10 minutes by .github/workflows/text-confirmations.yml (until the wedding), or by hand: node send-text-confirmations.mjs [--dry-run]
-import { requireEnv, firestore, FieldValue, dryRun, smsReady, sendSms, segments, TEXTS, pause } from "./lib.mjs";
+import { requireEnv, firestore, FieldValue, dryRun, smsReady, sendSms, segments, TEXTS, MEDIA, pause } from "./lib.mjs";
 
 requireEnv(["FIREBASE_SERVICE_ACCOUNT"]);
 if (!smsReady()) { console.error("Twilio settings missing (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM)."); process.exit(1); }
@@ -27,7 +27,7 @@ for (const { ref, id, r } of docs) {
   const body = r.attending ? TEXTS.confirmYes(r) : TEXTS.confirmNo(r);
   if (dryRun) { console.log(`[dry run] ${r.phone} (${segments(body)} seg): ${body}`); continue; }
   try {
-    await sendSms(r.phone, body);
+    await sendSms(r.phone, body, r.attending ? MEDIA.confirmYes : MEDIA.confirmNo);
     await ref.update({ smsConfirmationSentAt: FieldValue.serverTimestamp() });
     textedPhones.add(r.phone); budget--; sent++;
     console.log(`texted: ${r.name}`);
