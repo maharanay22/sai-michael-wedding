@@ -266,6 +266,24 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
   @keyframes sway{0%,100%{transform:rotate(0deg) translateY(0)}25%{transform:rotate(.35deg) translateY(1px)}75%{transform:rotate(-.35deg) translateY(1px)}}
   @keyframes bloom{0%,100%{opacity:1}50%{opacity:.82}}
 }
+
+/* ---- bilingual balance: English beside every Telugu line ---- */
+.en-sub{font-family:var(--en-display);font-weight:600;color:var(--ink);font-size:clamp(15px,4vw,18px);line-height:1.35;margin-top:-4px}
+.en-sub i{font-family:var(--en-body);font-weight:400;color:var(--ink-soft);font-size:.88em}
+.cap-en small{display:block;font-weight:500;font-style:italic;color:var(--ink-soft);font-size:.9em}
+.te-flat{letter-spacing:0;text-transform:none;font-family:var(--te-body);font-weight:700}
+.cap-en{display:block;font-family:var(--en-display);font-weight:600;color:var(--ink);font-size:clamp(12px,3.3vw,15px);line-height:1.25;margin-top:3px}
+.shloka-en{margin:-4px 0 0;font-family:var(--en-body);font-style:italic;color:var(--ink-soft);font-size:clamp(14.5px,3.8vw,16.5px);line-height:1.55;max-width:38ch}
+.title-en{margin:-2px 0 4px;font-family:var(--en-display);font-weight:600;color:var(--ink);font-size:clamp(20px,5.4vw,26px);line-height:1.25;text-wrap:balance}
+.kalyanam-en{font-family:var(--en-display);font-weight:600;color:var(--ink);font-size:clamp(16px,4.2vw,19px);margin-top:-6px}
+.role-tag{font-family:var(--en-display);text-transform:uppercase;letter-spacing:.2em;font-size:12.5px;color:var(--sinduram);font-weight:700}
+.role-en{font-family:var(--en-display);font-weight:700;color:var(--kumkuma);font-size:26px;line-height:1.1;margin-top:-4px}
+.fam .rel-en{font-style:normal;color:var(--ink);font-size:16px;line-height:1.45}
+.fam .role{font-size:16px;margin-top:6px;padding-top:8px;border-top:1px solid var(--pasupu)}
+.h-en{font-family:var(--en-display);font-weight:600;color:var(--ink);font-size:clamp(17px,4.4vw,21px);margin-top:-6px}
+.h-en.light{color:var(--paper);font-size:clamp(14px,3.8vw,17px);font-style:italic;font-weight:500}
+.lbl-en{font-family:var(--en-display);font-weight:600}
+.blessing-en{font-family:var(--en-display);font-weight:600;font-size:16px;color:var(--ink)}
 </style>
 </head>
 <body>
@@ -328,22 +346,24 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <section aria-label="Invocation">
       <div class="om" aria-label="Om">ॐ</div>
       <div class="srirastu">శ్రీరస్తు<span>✦</span>శుభమస్తు<span>✦</span>అవిఘ్నమస్తు</div>
+      <div class="en-sub">Srirastu · Subhamastu · Avighnamastu<br><i>May all be prosperous, auspicious and free of obstacles</i></div>
 
       <div class="deities">
         <figure class="shrine" style="margin:0">
           <div class="arch-frame"><img src="img/deity-gowri.jpg" alt="Sri Gowri Mata" loading="eager"></div>
-          <figcaption class="cap">శ్రీ గౌరీ ప్రసన్న</figcaption>
+          <figcaption class="cap">శ్రీ గౌరీ ప్రసన్న<span class="cap-en">Sri Gowri Mata</span></figcaption>
         </figure>
         <figure class="shrine centre" style="margin:0">
           <div class="arch-frame"><img src="img/deity-ganesha.jpg" alt="Sri Ganesha" loading="eager"></div>
-          <figcaption class="cap">శ్రీ గణేశాయ నమః</figcaption>
+          <figcaption class="cap">శ్రీ గణేశాయ నమః<span class="cap-en">Sri Ganesha</span></figcaption>
         </figure>
         <figure class="shrine" style="margin:0">
           <div class="arch-frame"><img src="img/deity-narasimha.jpg" alt="Sri Varaha Lakshmi Narasimha Swamy, Simhachalam" loading="eager"></div>
-          <figcaption class="cap">శ్రీ వరాహ లక్ష్మీ నరసింహ స్వామినే నమః</figcaption>
+          <figcaption class="cap">శ్రీ వరాహ లక్ష్మీ నరసింహ స్వామినే నమః<span class="cap-en">Sri Narasimha Swamy<small>Simhachalam</small></span></figcaption>
         </figure>
       </div>
       <p class="shloka">వక్రతుండ మహాకాయ సూర్యకోటి సమప్రభ ।<br>నిర్విఘ్నం కురు మే దేవ సర్వకార్యేషు సర్వదా ॥</p>
+      <p class="shloka-en">O Lord Ganesha, with curved trunk and mighty form, radiant as a million suns,<br>remove all obstacles from everything we do, always.</p>
     </section>
 
     <svg class="divider" viewBox="0 0 210 22" aria-hidden="true">
@@ -358,6 +378,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <section>
       <div class="eyebrow">Wedding Invitation</div>
       <h1 class="family-title">కరోతు వారి<br>వివాహ ఆహ్వానము</h1>
+      <p class="title-en">The Karothu family joyfully invites you<br>to the wedding of</p>
       <div class="arch"><img src="img/couple.jpg" alt="Sai Keerthana and Michael"></div>
       <div class="names">
         <div class="te-name">సాయి కీర్తన</div>
@@ -367,11 +388,12 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
         <div class="en-name">Michael</div>
       </div>
       <div class="kalyanam">కళ్యాణం చూతము రారండి</div>
+      <div class="kalyanam-en">Please join us to witness and bless their union</div>
     </section>
 
     <!-- Video -->
     <section aria-label="Invitation video">
-      <div class="eyebrow">ఆహ్వాన చిత్రం · Invitation Video</div>
+      <div class="eyebrow"><span class="te-flat">ఆహ్వాన చిత్రం</span> · Invitation Video</div>
       <div class="video-frame">
         <video id="inviteVideo" controls playsinline preload="metadata" poster="img/poster.jpg">
           <source src="invite.mp4" type="video/mp4">
@@ -384,15 +406,19 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
       <div class="families">
         <div class="fam">
           <div class="ph"><img src="img/bride.jpg" alt="Bride, Sai Keerthana"></div>
+          <div class="role-tag">The Bride</div>
+          <div class="role-en">Sai Keerthana</div>
+          <div class="rel-en">Only daughter of<br>Sri Karothu Suresh &amp; Smt. Ammulu</div>
           <div class="role">చి॥ల॥సౌ॥ సాయి కీర్తన</div>
           <div class="rel">శ్రీ కరోతు సురేష్ – శ్రీమతి అమ్ములు<br>గార్ల ఏకైక కుమార్తె</div>
-          <div class="rel-en">Only daughter of<br>Sri Karothu Suresh &amp; Smt. Ammulu</div>
         </div>
         <div class="fam">
           <div class="ph"><img src="img/groom.jpg" alt="Groom, Michael"></div>
+          <div class="role-tag">The Groom</div>
+          <div class="role-en">Michael</div>
+          <div class="rel-en">Eldest son of<br>Dr. Michael Sr. &amp; Mrs. Jodi</div>
           <div class="role">చి॥ మైఖేల్ రజానో</div>
           <div class="rel">శ్రీ డాక్టర్ సీనియర్ మైఖేల్ – శ్రీమతి జోడి<br>గార్ల పెద్దకుమారుడు</div>
-          <div class="rel-en">Eldest son of<br>Dr. Michael Sr. &amp; Mrs. Jodi</div>
         </div>
       </div>
     </section>
@@ -400,6 +426,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <!-- Muhurtham -->
     <section class="muhurtham" aria-label="Muhurtham">
       <h2>సుముహూర్తం</h2>
+      <div class="h-en light">Muhurtham · the auspicious time for the sacred vows</div>
       <div class="date-te">తేది: 6 నవంబర్ 2026, శుక్రవారం · సా॥ 6 గం॥లకు</div>
       <div class="date-en">Friday, 6 November 2026</div>
       <div class="time">6:00 in the evening</div>
@@ -413,6 +440,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <!-- Venue -->
     <section class="venue">
       <h3>కళ్యాణ వేదిక</h3>
+      <div class="h-en">Wedding Venue</div>
       <div class="place">Hindu Temple of Atlanta</div>
       <div class="addr">5851 Georgia Hwy 85, Riverdale, GA 30274</div>
       <div class="btn-row">
@@ -439,7 +467,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
         <label class="optin" for="r-sms">
           <input type="checkbox" id="r-sms" name="smsOptIn">
           <span><b>Text me</b> a confirmation and a reminder the day before.
-          <small>By ticking this box, you agree to receive up to 3 texts from Maha Yadavalli (Karothu family) about this wedding only: an RSVP confirmation and a reminder. Consent is optional. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms &amp; Conditions</a>.</small></span>
+          <small>By ticking this box, you agree to receive up to 3 texts from the Karothu family about this wedding only: an RSVP confirmation and a reminder. Consent is optional. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms &amp; Conditions</a>.</small></span>
         </label>
         <fieldset>
           <legend>Will you attend?</legend>
@@ -473,10 +501,10 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
 
     <!-- Hosts -->
     <section class="hosts">
-      <div class="lbl">ఆహ్వానించువారు</div>
+      <div class="lbl">ఆహ్వానించువారు <span class="lbl-en">· With warm wishes from</span></div>
       <div class="who">శ్రీ కరోతు సురేష్ – శ్రీమతి అమ్ములు</div>
       <div class="who-en">Sri Karothu Suresh &amp; Smt. Ammulu</div>
-      <p class="blessing">మీ రాక మాకు ఆనందం · మీ ఆశీస్సులే మాకు కానుక<br><span style="font-family:var(--en-body);font-style:italic">Your presence is our joy; your blessings, our gift.</span></p>
+      <p class="blessing">మీ రాక మాకు ఆనందం · మీ ఆశీస్సులే మాకు కానుక<br><span class="blessing-en">Your presence is our joy; your blessings, our gift.</span></p>
     </section>
 
   </div>
