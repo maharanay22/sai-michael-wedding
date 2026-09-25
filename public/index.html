@@ -284,11 +284,103 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
 .h-en.light{color:var(--paper);font-size:clamp(14px,3.8vw,17px);font-style:italic;font-weight:500}
 .lbl-en{font-family:var(--en-display);font-weight:600}
 .blessing-en{font-family:var(--en-display);font-weight:600;font-size:16px;color:var(--ink)}
+
+/* ================= GRAND: live graphics ================= */
+#petals{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:40}
+.bell{position:absolute;top:16px;width:30px;height:76px;z-index:2;transform-origin:50% 0;pointer-events:none}
+.bell.b-left{left:calc(50% - 104px)}.bell.b-right{left:calc(50% + 74px)}
+.diyas{display:flex;justify-content:center;gap:clamp(10px,4vw,26px);margin:4px 0 -4px}
+.diya{width:44px;height:44px;overflow:visible}
+.title-row{display:flex;align-items:center;justify-content:center;gap:clamp(2px,1.5vw,14px);width:100%}
+.kalash{flex:0 0 auto;width:clamp(30px,8vw,64px);height:clamp(46px,12vw,96px)}
+.title-row .family-title{font-size:clamp(26px,7vw,42px);flex:0 1 auto}
+.kalash.flip{transform:scaleX(-1)}
+.arch-frame::after,.arch::after{content:"";position:absolute;top:0;left:-60%;width:40%;height:100%;pointer-events:none;
+  background:linear-gradient(100deg,transparent,rgba(255,240,190,.55),transparent);transform:skewX(-12deg)}
+.arch{position:relative}
+.om{position:relative}
+/* opening doors */
+.doors{position:fixed;top:0;left:0;right:0;bottom:0;z-index:60;display:flex;perspective:1600px;pointer-events:auto;cursor:pointer}
+.doors[hidden]{display:none!important}
+.door{flex:1;position:relative;transform-style:preserve-3d;
+  background:radial-gradient(circle at 50% 40%,#B3122E,#6E0A1A 75%);box-shadow:inset 0 0 0 6px #E9A800,inset 0 0 0 10px #6E0A1A,inset 0 0 0 12px #F7D774}
+.door.left{transform-origin:0 50%}.door.right{transform-origin:100% 50%}
+.door-panel{position:absolute;top:7%;bottom:7%;left:12%;right:12%;border:2px solid #E9A800;border-radius:48% 48% 6px 6px / 22% 22% 6px 6px;
+  background:repeating-linear-gradient(45deg,rgba(247,215,116,.12) 0 2px,transparent 2px 16px),repeating-linear-gradient(-45deg,rgba(247,215,116,.12) 0 2px,transparent 2px 16px)}
+.knocker{position:absolute;top:72%;width:26px;height:26px;border-radius:50%;border:4px solid #E9A800;box-shadow:0 0 12px rgba(233,168,0,.6)}
+.door.left .knocker{right:-6px}.door.right .knocker{left:-6px}
+.door-text{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);text-align:center;color:#F7D774;pointer-events:none;background:radial-gradient(ellipse,#8E1020 55%,#6E0A1A);border:3px double #E9A800;border-radius:14px;padding:18px 26px;box-shadow:0 10px 30px rgba(0,0,0,.45);
+  text-shadow:0 2px 12px rgba(0,0,0,.5);white-space:nowrap}
+.dt-te{font-family:var(--te-display);font-size:clamp(34px,10vw,56px);line-height:1.2}
+.dt-en{font-family:var(--en-display);font-weight:700;font-size:clamp(24px,7vw,36px);letter-spacing:.12em;text-transform:uppercase}
+.dt-hint{font-family:var(--en-body);font-style:italic;font-size:16px;opacity:.9;margin-top:6px}
+.doors.open .door.left{transform:rotateY(-108deg);transition:transform 1.8s cubic-bezier(.6,.05,.3,1)}
+.doors.open .door.right{transform:rotateY(108deg);transition:transform 1.8s cubic-bezier(.6,.05,.3,1)}
+.doors.open .door-text{opacity:0;transition:opacity .5s}
+.doors.open{pointer-events:none}
+
+@media (prefers-reduced-motion:no-preference){
+  .bell.b-left{animation:swing 3.2s ease-in-out infinite}
+  .bell.b-right{animation:swing 3.2s ease-in-out -1.6s infinite}
+  @keyframes swing{0%,100%{transform:rotate(9deg)}50%{transform:rotate(-9deg)}}
+  .diya .flame{transform-origin:30px 32px;animation:flicker 1.3s ease-in-out infinite alternate}
+  .diya .glow{animation:glowp 1.3s ease-in-out infinite alternate}
+  .diya.d2 .flame,.diya.d2 .glow{animation-delay:-.4s}.diya.d3 .flame,.diya.d3 .glow{animation-delay:-.8s}
+  .diya.d4 .flame,.diya.d4 .glow{animation-delay:-.2s}.diya.d5 .flame,.diya.d5 .glow{animation-delay:-1s}
+  @keyframes flicker{0%{transform:scale(1,1) skewX(0)}40%{transform:scale(.92,1.08) skewX(3deg)}70%{transform:scale(1.05,.95) skewX(-3deg)}100%{transform:scale(.96,1.1) skewX(1deg)}}
+  @keyframes glowp{from{opacity:.18}to{opacity:.4}}
+  .arch-frame::after,.arch::after{animation:shine 6s ease-in-out infinite}
+  .shrine.centre .arch-frame::after{animation-delay:.6s}.arch::after{animation-delay:1.8s}
+  @keyframes shine{0%,65%{left:-60%}90%,100%{left:130%}}
+  .kalash{animation:bob 4s ease-in-out infinite}.kalash.flip{animation:bobf 4s ease-in-out -2s infinite}
+  @keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+  @keyframes bobf{0%,100%{transform:scaleX(-1) translateY(0)}50%{transform:scaleX(-1) translateY(-4px)}}
+}
+@media (prefers-reduced-motion:reduce){.doors{display:none!important}}
 </style>
 </head>
 <body>
 
 
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <defs>
+    <linearGradient id="brass" x1="0" x2="1"><stop offset="0" stop-color="#8C5A00"/><stop offset=".35" stop-color="#F7D774"/><stop offset=".6" stop-color="#E9A800"/><stop offset="1" stop-color="#7A4A00"/></linearGradient>
+    <radialGradient id="flame" cx=".5" cy=".7" r=".6"><stop offset="0" stop-color="#FFF6C2"/><stop offset=".45" stop-color="#FFC21A"/><stop offset="1" stop-color="#E0531F"/></radialGradient>
+    <symbol id="bell" viewBox="0 0 40 100">
+      <line x1="20" y1="0" x2="20" y2="44" stroke="#B07A00" stroke-width="2" stroke-dasharray="4 2"/>
+      <circle cx="20" cy="46" r="3.5" fill="url(#brass)"/>
+      <path d="M8 80 Q8 52 20 49 Q32 52 32 80 L36 86 L4 86 Z" fill="url(#brass)" stroke="#7A4A00" stroke-width=".8"/>
+      <path d="M9 74 H31" stroke="#A3122A" stroke-width="2"/>
+      <circle cx="20" cy="91" r="4" fill="url(#brass)" stroke="#7A4A00" stroke-width=".8"/>
+    </symbol>
+    <symbol id="diya" viewBox="0 0 60 60">
+      <ellipse cx="30" cy="30" rx="16" ry="20" fill="#FFC21A" opacity=".25" class="glow"/>
+      <path class="flame" d="M30 8 Q38 22 30 34 Q22 22 30 8Z" fill="url(#flame)"/>
+      <path d="M4 38 Q30 62 56 38 Q52 34 30 35 Q8 34 4 38Z" fill="#C8651B"/>
+      <path d="M4 38 Q30 44 56 38" stroke="#E9A800" stroke-width="2.4" fill="none"/>
+      <path d="M50 37 Q60 33 58 30 Q55 34 48 35Z" fill="#C8651B"/>
+      <g fill="#F7D774"><circle cx="18" cy="46" r="1.6"/><circle cx="30" cy="49" r="1.6"/><circle cx="42" cy="46" r="1.6"/></g>
+    </symbol>
+    <symbol id="kalash" viewBox="0 0 80 120">
+      <g fill="#3F6B22"><path d="M40 34 Q14 20 6 30 Q22 34 40 38Z"/><path d="M40 34 Q66 20 74 30 Q58 34 40 38Z"/><path d="M40 32 Q22 8 12 12 Q24 24 40 36Z"/><path d="M40 32 Q58 8 68 12 Q56 24 40 36Z"/></g>
+      <g stroke="#86B04E" stroke-width=".8" fill="none"><path d="M40 36 L10 29"/><path d="M40 36 L70 29"/></g>
+      <ellipse cx="40" cy="24" rx="12" ry="15" fill="#7A4A1E"/>
+      <path d="M31 16 Q40 8 49 16" stroke="#E9A800" stroke-width="3" fill="none"/>
+      <circle cx="40" cy="26" r="3" fill="#A3122A"/>
+      <rect x="27" y="38" width="26" height="8" rx="3" fill="url(#brass)"/>
+      <path d="M30 46 Q30 52 22 58 Q8 70 12 90 Q18 112 40 114 Q62 112 68 90 Q72 70 58 58 Q50 52 50 46Z" fill="url(#brass)" stroke="#7A4A00" stroke-width="1"/>
+      <path d="M15 78 Q40 88 65 78" stroke="#A3122A" stroke-width="3" fill="none"/>
+      <path d="M13 86 Q40 96 67 86" stroke="#E9A800" stroke-width="1.6" fill="none" stroke-dasharray="2 3"/>
+      <circle cx="40" cy="70" r="5" fill="#A3122A"/><circle cx="40" cy="70" r="2.2" fill="#F7D774"/>
+    </symbol>
+  </defs>
+</svg>
+<div class="doors" id="doors" aria-hidden="true">
+  <div class="door left"><div class="door-panel"><span class="knocker"></span></div></div>
+  <div class="door right"><div class="door-panel"><span class="knocker"></span></div></div>
+  <div class="door-text"><div class="dt-te">శుభ స్వాగతం</div><div class="dt-en">Welcome</div><div class="dt-hint">Sai Keerthana &amp; Michael</div></div>
+</div>
+<canvas id="petals" aria-hidden="true"></canvas>
 <!-- Thoranam: mango leaves & marigolds -->
 <svg class="thoranam" aria-hidden="true" preserveAspectRatio="none">
   <defs>
@@ -314,6 +406,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
 </svg>
 
 <main class="patrika">
+  <svg class="bell b-left" aria-hidden="true"><use href="#bell" xlink:href="#bell"/></svg><svg class="bell b-right" aria-hidden="true"><use href="#bell" xlink:href="#bell"/></svg>
   <svg width="0" height="0" style="position:absolute" aria-hidden="true" xmlns:xlink="http://www.w3.org/1999/xlink"><defs>
     <g id="cornerArt">
       <path d="M4 116 V4 H116" fill="none" stroke="#A3122A" stroke-width="2.2"/>
@@ -364,6 +457,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
       </div>
       <p class="shloka">వక్రతుండ మహాకాయ సూర్యకోటి సమప్రభ ।<br>నిర్విఘ్నం కురు మే దేవ సర్వకార్యేషు సర్వదా ॥</p>
       <p class="shloka-en">O Lord Ganesha, with curved trunk and mighty form, radiant as a million suns,<br>remove all obstacles from everything we do, always.</p>
+      <div class="diyas" aria-hidden="true"><svg class="diya d1"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d2"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d3"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d4"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d5"><use href="#diya" xlink:href="#diya"/></svg></div>
     </section>
 
     <svg class="divider" viewBox="0 0 210 22" aria-hidden="true">
@@ -377,7 +471,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <!-- Title & couple -->
     <section>
       <div class="eyebrow">Wedding Invitation</div>
-      <h1 class="family-title">కరోతు వారి<br>వివాహ ఆహ్వానము</h1>
+      <div class="title-row"><svg class="kalash" aria-hidden="true"><use href="#kalash" xlink:href="#kalash"/></svg><h1 class="family-title">కరోతు వారి<br>వివాహ ఆహ్వానము</h1><svg class="kalash flip" aria-hidden="true"><use href="#kalash" xlink:href="#kalash"/></svg></div>
       <p class="title-en">The Karothu family joyfully invites you<br>to the wedding of</p>
       <div class="arch"><img src="img/couple.jpg" alt="Sai Keerthana and Michael"></div>
       <div class="names">
@@ -395,7 +489,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
     <section aria-label="Invitation video">
       <div class="eyebrow"><span class="te-flat">ఆహ్వాన చిత్రం</span> · Invitation Video</div>
       <div class="video-frame">
-        <video id="inviteVideo" controls playsinline preload="metadata" poster="img/poster.jpg">
+        <video id="inviteVideo" controls playsinline preload="metadata" poster="img/video-cover.jpg">
           <source src="invite.mp4" type="video/mp4">
         </video>
       </div>
@@ -501,6 +595,7 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
 
     <!-- Hosts -->
     <section class="hosts">
+      <div class="diyas" aria-hidden="true"><svg class="diya d1"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d2"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d3"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d4"><use href="#diya" xlink:href="#diya"/></svg><svg class="diya d5"><use href="#diya" xlink:href="#diya"/></svg></div>
       <div class="lbl">ఆహ్వానించువారు <span class="lbl-en">· With warm wishes from</span></div>
       <div class="who">శ్రీ కరోతు సురేష్ – శ్రీమతి అమ్ములు</div>
       <div class="who-en">Sri Karothu Suresh &amp; Smt. Ammulu</div>
@@ -514,6 +609,79 @@ body::after{content:"";position:fixed;top:0;left:0;right:0;height:60vh;z-index:-
   </svg>
 </main>
 
+<script>
+/* ===== Grand effects: opening doors, petal shower, sparkles ===== */
+(function(){
+  "use strict";
+  var reduce = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var doors = document.getElementById('doors');
+  var cv = document.getElementById('petals');
+  if (reduce){ if (doors) doors.hidden = true; if (cv) cv.style.display = 'none'; return; }
+
+  // --- doors: open automatically, or on tap
+  var opened = false;
+  function openDoors(){
+    if (opened || !doors) return; opened = true;
+    doors.classList.add('open'); burst(45);
+    setTimeout(function(){ doors.hidden = true; }, 2000);
+  }
+  if (doors){ doors.addEventListener('click', openDoors); setTimeout(openDoors, 1300); }
+
+  // --- petals + sparkles on one canvas
+  var ctx = cv.getContext('2d'), W = 0, H = 0, dpr = Math.min(window.devicePixelRatio || 1, 2);
+  function size(){ W = innerWidth; H = innerHeight; cv.width = W*dpr; cv.height = H*dpr; ctx.setTransform(dpr,0,0,dpr,0,0); }
+  size(); addEventListener('resize', size);
+  var COLORS = ['#F29A0B','#FFB81C','#E0531F','#C8102E','#FFD24A','#FFFFFF','#F7C6CE'];
+  var petals = [], sparkles = [];
+  var steady = function(){ return Math.round(Math.min(24, Math.max(10, W/26))); };
+  function petal(top){
+    return { x: Math.random()*W, y: top ? -20 - Math.random()*H*0.3 : Math.random()*H,
+      r: 5 + Math.random()*6, vy: 0.35 + Math.random()*0.8, sway: Math.random()*Math.PI*2, swaySp: 0.01 + Math.random()*0.02,
+      rot: Math.random()*6.28, vr: (Math.random()-.5)*0.04, flip: Math.random()*6.28, vf: 0.03 + Math.random()*0.04,
+      c: COLORS[(Math.random()*COLORS.length)|0], jasmine: Math.random() < 0.18 };
+  }
+  for (var i=0;i<steady();i++) petals.push(petal(false));
+  for (var j=0;j<16;j++) sparkles.push({x:Math.random()*W, y:Math.random()*H, t:Math.random()*6.28, sp:0.02+Math.random()*0.03, r:1+Math.random()*1.8});
+  function burst(n){ for (var k=0;k<n;k++){ var p = petal(true); p.vy += 0.8; p.x = W/2 + (Math.random()-.5)*W*0.9; petals.push(p); } }
+
+  function drawPetal(p){
+    ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.rot); ctx.scale(Math.cos(p.flip), 1);
+    if (p.jasmine){
+      ctx.fillStyle = '#FFFFFF';
+      for (var a=0;a<5;a++){ ctx.rotate(1.2566); ctx.beginPath(); ctx.ellipse(0, -p.r*0.55, p.r*0.28, p.r*0.55, 0, 0, 6.283); ctx.fill(); }
+      ctx.fillStyle = '#FFD24A'; ctx.beginPath(); ctx.arc(0,0,p.r*0.18,0,6.283); ctx.fill();
+    } else {
+      ctx.fillStyle = p.c; ctx.globalAlpha = 0.82;
+      ctx.beginPath(); ctx.ellipse(0, 0, p.r*0.55, p.r, 0, 0, 6.283); ctx.fill();
+      ctx.globalAlpha = 0.25; ctx.fillStyle = '#000'; ctx.beginPath(); ctx.ellipse(0, p.r*0.2, p.r*0.12, p.r*0.7, 0, 0, 6.283); ctx.fill();
+    }
+    ctx.restore();
+  }
+  var running = true;
+  document.addEventListener('visibilitychange', function(){ running = !document.hidden; if (running) requestAnimationFrame(frame); });
+  function frame(){
+    if (!running) return;
+    ctx.clearRect(0,0,W,H);
+    for (var i=petals.length-1;i>=0;i--){
+      var p = petals[i];
+      p.sway += p.swaySp; p.x += Math.sin(p.sway)*0.6; p.y += p.vy; p.rot += p.vr; p.flip += p.vf;
+      if (p.vy > 1.2) p.vy *= 0.995;
+      if (p.y > H + 20){ if (petals.length > steady()) petals.splice(i,1); else petals[i] = petal(true); continue; }
+      drawPetal(p);
+    }
+    for (var k=0;k<sparkles.length;k++){
+      var s = sparkles[k]; s.t += s.sp; var a = Math.max(0, Math.sin(s.t));
+      if (s.t > 6.28){ s.t = 0; s.x = Math.random()*W; s.y = Math.random()*H; }
+      ctx.globalAlpha = a*0.9; ctx.fillStyle = '#FFE08A';
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r*(0.6+a), 0, 6.283); ctx.fill();
+      ctx.globalAlpha = a*0.5; ctx.fillRect(s.x - s.r*3*a, s.y - 0.5, s.r*6*a, 1); ctx.fillRect(s.x - 0.5, s.y - s.r*3*a, 1, s.r*6*a);
+      ctx.globalAlpha = 1;
+    }
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+</script>
 <script src="js/config.js"></script>
 <script src="js/fb-guest.js"></script>
 <script>
