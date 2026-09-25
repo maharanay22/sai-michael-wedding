@@ -68,11 +68,11 @@ export const MEDIA = {
 };
 export const TEXTS = {
   confirmYes: (r) =>
-    `Suresh Karothu (Karothu Family): 🙏 Namaskaram ${first(r.name)}! Your RSVP is confirmed for ${guestLine(r)} 🌸\n\nSai Keerthana & Michael's wedding\n📅 Fri, Nov 6 · 6:00 PM\n🛕 Hindu Temple of Atlanta, Riverdale GA\n\nWe look forward to your blessings! 🪔\nReply STOP to opt out.`,
+    `🙏 Namaskaram ${first(r.name)}! Your RSVP is confirmed for ${guestLine(r)} 🌸\n\nSai Keerthana & Michael's wedding\n📅 Fri, Nov 6 · 6:00 PM\n🛕 Hindu Temple of Atlanta, Riverdale GA\n\nWe look forward to your blessings! 🪔\n– Maha Yadavalli. Reply STOP to opt out.`,
   confirmNo: (r) =>
-    `Suresh Karothu (Karothu Family): 🙏 RSVP received. ${first(r.name)}, your response for Sai Keerthana & Michael's wedding (Nov 6) is recorded as "Unable to attend". To change it, RSVP again at ${SITE_URL || "our invitation site"} 🌸\nReply STOP to opt out.`,
+    `🙏 RSVP received. ${first(r.name)}, your response for Sai Keerthana & Michael's wedding (Nov 6) is recorded as "Unable to attend". To change it, RSVP again at ${SITE_URL || "our invitation site"} 🌸\n– Maha Yadavalli. Reply STOP to opt out.`,
   reminder: (r) =>
-    `Suresh Karothu (Karothu Family): 🪔 See you tomorrow! 🪔\n\nSai Keerthana & Michael's wedding is TOMORROW\n📅 Fri, Nov 6 · Muhurtham 6:00 PM\n🛕 Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale GA 30274\n👥 ${guestLine(r)}${SITE_URL ? "\n🔗 " + SITE_URL : ""}\n\nReply STOP to opt out.`,
+    `🪔 See you tomorrow! 🪔\n\nSai Keerthana & Michael's wedding is TOMORROW\n📅 Fri, Nov 6 · Muhurtham 6:00 PM\n🛕 Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale GA 30274\n👥 ${guestLine(r)}${SITE_URL ? "\n🔗 " + SITE_URL : ""}\n\n– Maha Yadavalli. Reply STOP to opt out.`,
 };
 function first(name) {
   return String(name || "").trim().split(/\s+/)[0].slice(0, 20) || "friend";
