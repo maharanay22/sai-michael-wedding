@@ -6,9 +6,18 @@ import { requireEnv, firestore, FieldValue, dryRun, guestLine, smsReady, sendSms
 
 if (!smsReady()) { console.error("Twilio settings missing (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM)."); process.exit(1); }
 
-const testPhone = (process.env.TEST_PHONE || "").trim();
+// Accepts any common US format: 4092739225, (409) 273-9225, 409-273-9225, 1 409 273 9225 or +14092739225.
+function toE164(v) {
+  const t = String(v || "").trim(), d = t.replace(/\D/g, "");
+  if (!t) return "";
+  if (t.startsWith("+")) return d.length >= 8 && d.length <= 15 ? "+" + d : null;
+  if (d.length === 10 && /^[2-9]/.test(d)) return "+1" + d;
+  if (d.length === 11 && d[0] === "1") return "+" + d;
+  return null;
+}
+const testPhone = toE164(process.env.TEST_PHONE);
+if (testPhone === null) { console.error(`Could not read the test phone "${process.env.TEST_PHONE}". Type a 10-digit US mobile number, e.g. 4045550123.`); process.exit(1); }
 if (testPhone) {
-  if (!/^\+\d{8,15}$/.test(testPhone)) { console.error("TEST_PHONE must look like +14045550123"); process.exit(1); }
   const body = TEXTS.reminder({ name: "Test Guest", adults: 2, kids: 1 });
   console.log(`Test reminder to ${testPhone} (${segments(body)} segment(s)):\n${body}`);
   await sendSms(testPhone, body, MEDIA.reminder);
