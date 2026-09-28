@@ -2,8 +2,8 @@ name: RSVP confirmation texts
 
 on:
   schedule:
-    # Every 10 minutes from about 8 AM to midnight Eastern (times are UTC).
-    - cron: "3-59/10 0-3,12-23 * * *"
+           # Every 5 minutes from about 8 AM to midnight Eastern (times are UTC).
+       - cron: "*/5 0-3,12-23 * * *"
   workflow_dispatch:
     inputs:
       dry_run:
