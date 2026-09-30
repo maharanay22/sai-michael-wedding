@@ -47,6 +47,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .msg{font-size:15px}
 .msg.bad{color:var(--kumkuma)}
 .confirm p{margin:0 0 10px}
+.del{-webkit-appearance:none;appearance:none;font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1.5px solid #A3122A;background:#fff;color:#A3122A;cursor:pointer;white-space:nowrap}
+.del:hover{background:#A3122A;color:#fff}.del[disabled]{opacity:.6;cursor:progress}
 .wa{display:inline-block;padding:4px 12px;border-radius:999px;background:#1F7A3F;color:#fff;text-decoration:none;font-size:14px;white-space:nowrap}
 </style>
 </head>
@@ -89,15 +91,15 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     <div class="msg" id="toolMsg" role="status"></div>
     <div class="tablewrap">
       <table>
-        <thead><tr><th>Name</th><th>Reply</th><th class="num">Adults</th><th class="num">Children</th><th>Mobile</th><th>Note</th><th>Replied</th><th>Texts</th><th>WhatsApp</th></tr></thead>
-        <tbody id="rows"><tr><td colspan="9">Loading…</td></tr></tbody>
+        <thead><tr><th>Name</th><th>Reply</th><th class="num">Adults</th><th class="num">Children</th><th>Mobile</th><th>Note</th><th>Replied</th><th>Texts</th><th>WhatsApp</th><th>Remove</th></tr></thead>
+        <tbody id="rows"><tr><td colspan="10">Loading…</td></tr></tbody>
       </table>
     </div>
   </section>
 </main>
 
 <script src="js/config.js"></script>
-<script src="js/fb-admin.js"></script>
+<script src="js/fb-admin.js?v=2"></script>
 <script>
 (function(){
   "use strict";
@@ -129,7 +131,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     var q = $('filter').value.trim().toLowerCase(), qd = q.replace(/\D/g,'');
     var rows = all.filter(function(r){ return !q || String(r.name||'').toLowerCase().indexOf(q) !== -1 || (qd && String(r.phone||'').indexOf(qd) !== -1); });
     var tb = $('rows'); tb.innerHTML = '';
-    if (!rows.length){ var tr0 = document.createElement('tr'); var c0 = td(all.length ? 'No matches.' : 'No RSVPs yet.'); c0.colSpan = 9; tr0.appendChild(c0); tb.appendChild(tr0); }
+    if (!rows.length){ var tr0 = document.createElement('tr'); var c0 = td(all.length ? 'No matches.' : 'No RSVPs yet.'); c0.colSpan = 10; tr0.appendChild(c0); tb.appendChild(tr0); }
     rows.forEach(function(r){
       var tr = document.createElement('tr');
       tr.appendChild(td(r.name));
@@ -145,6 +147,11 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       if (r.attending && r.phone){ var a = document.createElement('a'); a.className = 'wa'; a.target = '_blank'; a.rel = 'noopener';
         a.href = 'https://wa.me/' + r.phone.replace(/\D/g,'') + '?text=' + encodeURIComponent(waText(r)); a.textContent = 'WhatsApp reminder'; w.appendChild(a); }
       tr.appendChild(w);
+      var dc = document.createElement('td'); var del = document.createElement('button');
+      del.type = 'button'; del.className = 'del'; del.textContent = 'Delete';
+      del.setAttribute('aria-label', 'Delete RSVP from ' + (r.name || 'guest'));
+      del.addEventListener('click', function(){ removeRsvp(r, del); });
+      dc.appendChild(del); tr.appendChild(dc);
       tb.appendChild(tr);
     });
     var yes = all.filter(function(r){ return r.attending; });
@@ -152,6 +159,18 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     var kids = yes.reduce(function(s,r){ return s + (r.kids||0); }, 0);
     $('s-guests').textContent = adults + kids; $('s-adults').textContent = adults; $('s-kids').textContent = kids;
     $('s-yes').textContent = yes.length; $('s-no').textContent = all.length - yes.length;
+  }
+
+  function removeRsvp(r, btn){
+    if (!confirm('Delete the RSVP from "' + (r.name || 'this guest') + '" (' + pretty(r.phone) + ')?\n\nThis cannot be undone.')) return;
+    btn.disabled = true; btn.textContent = 'Deleting…';
+    FB.deleteDoc(FB.doc(db, 'rsvps', r.id)).then(function(){
+      all = all.filter(function(x){ return x.id !== r.id; });
+      render(); say('Deleted the RSVP from ' + (r.name || 'guest') + '.');
+    }).catch(function(e){
+      console.error(e); btn.disabled = false; btn.textContent = 'Delete';
+      say(e && e.code === 'permission-denied' ? 'Not allowed: sign in with the host account to delete RSVPs.' : 'Could not delete. Check your connection and try again.', true);
+    });
   }
 
   function say(t, bad){ $('toolMsg').className = bad ? 'msg bad' : 'msg'; $('toolMsg').textContent = t; }
