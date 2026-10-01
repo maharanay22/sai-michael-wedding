@@ -47,6 +47,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .msg{font-size:15px}
 .msg.bad{color:var(--kumkuma)}
 .confirm p{margin:0 0 10px}
+.viewer .rm,.viewer #remindLink{display:none}
 .del{-webkit-appearance:none;appearance:none;font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1.5px solid #A3122A;background:#fff;color:#A3122A;cursor:pointer;white-space:nowrap}
 .del:hover{background:#A3122A;color:#fff}.del[disabled]{opacity:.6;cursor:progress}
 .wa{display:inline-block;padding:4px 12px;border-radius:999px;background:#1F7A3F;color:#fff;text-decoration:none;font-size:14px;white-space:nowrap}
@@ -91,7 +92,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
     <div class="msg" id="toolMsg" role="status"></div>
     <div class="tablewrap">
       <table>
-        <thead><tr><th>Name</th><th>Reply</th><th class="num">Adults</th><th class="num">Children</th><th>Mobile</th><th>Note</th><th>Replied</th><th>Texts</th><th>WhatsApp</th><th>Remove</th></tr></thead>
+        <thead><tr><th>Name</th><th>Reply</th><th class="num">Adults</th><th class="num">Children</th><th>Mobile</th><th>Note</th><th>Replied</th><th>Texts</th><th>WhatsApp</th><th class="rm">Remove</th></tr></thead>
         <tbody id="rows"><tr><td colspan="10">Loading…</td></tr></tbody>
       </table>
     </div>
@@ -99,7 +100,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 </main>
 
 <script src="js/config.js"></script>
-<script src="js/fb-admin.js?v=2"></script>
+<script src="js/fb-admin.js?v=3"></script>
 <script>
 (function(){
   "use strict";
@@ -147,7 +148,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       if (r.attending && r.phone){ var a = document.createElement('a'); a.className = 'wa'; a.target = '_blank'; a.rel = 'noopener';
         a.href = 'https://wa.me/' + r.phone.replace(/\D/g,'') + '?text=' + encodeURIComponent(waText(r)); a.textContent = 'WhatsApp reminder'; w.appendChild(a); }
       tr.appendChild(w);
-      var dc = document.createElement('td'); var del = document.createElement('button');
+      var dc = document.createElement('td'); dc.className = 'rm'; var del = document.createElement('button');
       del.type = 'button'; del.className = 'del'; del.textContent = 'Delete';
       del.setAttribute('aria-label', 'Delete RSVP from ' + (r.name || 'guest'));
       del.addEventListener('click', function(){ removeRsvp(r, del); });
@@ -201,6 +202,19 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   $('refreshBtn').addEventListener('click', load);
   $('filter').addEventListener('input', render);
 
+  // Share link: admin.html#k=PASSCODE signs in automatically as the read-only viewer (no Google login needed).
+  var VIEWER_EMAIL = 'rsvp-viewer@sai-michael-wedding.web';
+  var HOSTS = ['maharanay@gmail.com'];
+  var key = (function(){ var m = /[#&]k=([^&]+)/.exec(location.hash || ''); return m ? decodeURIComponent(m[1]) : ''; })();
+  var isHost = false;
+  function viewerSignIn(){
+    $('signinMsg').textContent = 'Opening the guest list…';
+    FB.signInWithEmailAndPassword(auth, VIEWER_EMAIL, key).catch(function(e){
+      console.error(e);
+      $('signinMsg').textContent = 'This link is not valid any more. Ask the hosts for the current link, or sign in with Google below.';
+    });
+  }
+
   $('signInBtn').addEventListener('click', function(){
     var provider = new FB.GoogleAuthProvider();
     $('signinMsg').textContent = '';
@@ -212,10 +226,15 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   FB.getRedirectResult(auth).catch(function(e){ $('signinMsg').textContent = 'Sign-in failed: ' + (e.message || e.code); });
   $('signOutBtn').addEventListener('click', function(){ FB.signOut(auth); });
 
+  var triedKey = false;
   FB.onAuthStateChanged(auth, function(user){
     var signed = !!user;
+    if (!signed && key && !triedKey){ triedKey = true; viewerSignIn(); return; }
+    isHost = signed && HOSTS.indexOf(String(user.email || '').toLowerCase()) !== -1;
+    document.body.classList.toggle('viewer', signed && !isHost);
     $('signinCard').hidden = signed; $('dash').hidden = !signed; $('dash2').hidden = !signed; $('who').hidden = !signed;
-    if (signed){ $('whoEmail').textContent = user.email; load(); } else { all = []; }
+    $('signOutBtn').hidden = signed && !isHost;
+    if (signed){ $('whoEmail').textContent = isHost ? user.email : 'View only'; load(); } else { all = []; }
   });
 })();
 </script>
