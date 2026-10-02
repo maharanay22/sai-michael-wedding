@@ -2,6 +2,7 @@
 // Run by .github/workflows/wedding-reminder.yml on 5 Nov 2026, or by hand.
 //   DRY_RUN=true   → only list who would be texted
 //   TEST_PHONE=+14045550123 → send one sample reminder to that number only
+//   EVENT=reception → reception guests (reception.html) instead of the wedding; run by reception-reminder.yml on 6 Nov 2026
 import { requireEnv, firestore, FieldValue, dryRun, guestLine, smsReady, sendSms, segments, TEXTS, MEDIA, pause } from "./lib.mjs";
 
 if (!smsReady()) { console.error("Twilio settings missing (TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN, TWILIO_FROM)."); process.exit(1); }
@@ -15,18 +16,24 @@ function toE164(v) {
   if (d.length === 11 && d[0] === "1") return "+" + d;
   return null;
 }
+const REC = process.env.EVENT === "reception";
+const COLLECTION = REC ? "receptionRsvps" : "rsvps";
+const reminderText = REC ? TEXTS.recReminder : TEXTS.reminder;
+const reminderMedia = REC ? MEDIA.recReminder : MEDIA.reminder;
+console.log(`Event: ${REC ? "wedding reception (Nov 7)" : "wedding (Nov 6)"}`);
+
 const testPhone = toE164(process.env.TEST_PHONE);
 if (testPhone === null) { console.error(`Could not read the test phone "${process.env.TEST_PHONE}". Type a 10-digit US mobile number, e.g. 4045550123.`); process.exit(1); }
 if (testPhone) {
-  const body = TEXTS.reminder({ name: "Test Guest", adults: 2, kids: 1 });
+  const body = reminderText({ name: "Test Guest", adults: 2, kids: 1 });
   console.log(`Test reminder to ${testPhone} (${segments(body)} segment(s)):\n${body}`);
-  await sendSms(testPhone, body, MEDIA.reminder);
+  await sendSms(testPhone, body, reminderMedia);
   console.log("Sent.");
   process.exit(0);
 }
 
 requireEnv(["FIREBASE_SERVICE_ACCOUNT"]);
-const snap = await firestore().collection("rsvps").where("attending", "==", true).get();
+const snap = await firestore().collection(COLLECTION).where("attending", "==", true).get();
 const textedPhones = new Set();
 const t = { text: 0, skipped: 0, notOpted: 0, failed: 0 };
 
@@ -36,10 +43,10 @@ for (const doc of snap.docs) {
   if (r.smsReminderSentAt) { t.skipped++; continue; }
   if (!/^\+\d{8,15}$/.test(r.phone || "")) { t.failed++; await doc.ref.update({ smsError: "invalid phone" }).catch(() => {}); continue; }
   if (textedPhones.has(r.phone)) { await doc.ref.update({ smsReminderSentAt: FieldValue.serverTimestamp() }); t.skipped++; continue; }
-  const body = TEXTS.reminder(r);
+  const body = reminderText(r);
   if (dryRun) { console.log(`[dry run] ${r.name} ${r.phone} (${guestLine(r)}, ${segments(body)} seg)`); continue; }
   try {
-    await sendSms(r.phone, body, MEDIA.reminder);
+    await sendSms(r.phone, body, reminderMedia);
     await doc.ref.update({ smsReminderSentAt: FieldValue.serverTimestamp() });
     textedPhones.add(r.phone); t.text++;
     console.log(`texted: ${r.name}`);

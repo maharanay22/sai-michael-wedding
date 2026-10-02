@@ -65,6 +65,10 @@ export const MEDIA = {
   confirmYes: SITE_URL ? SITE_URL + "/card-confirmed.jpg" : "",
   confirmNo: SITE_URL ? SITE_URL + "/photo-video-cover.jpg" : "",
   reminder: SITE_URL ? SITE_URL + "/card-reminder.jpg" : "",
+  // Wedding reception (reception.html)
+  recConfirmYes: SITE_URL ? SITE_URL + "/reception/couple.jpg" : "",
+  recConfirmNo: SITE_URL ? SITE_URL + "/reception/couple.jpg" : "",
+  recReminder: SITE_URL ? SITE_URL + "/reception/couple.jpg" : "",
 };
 export const TEXTS = {
   confirmYes: (r) =>
@@ -74,6 +78,18 @@ export const TEXTS = {
   reminder: (r) =>
     `🪔 See you tomorrow! 🪔\n\nSai Keerthana & Michael's wedding is TOMORROW\n📅 Fri, Nov 6 · Muhurtham 6:00 PM\n🛕 Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale GA 30274\n👥 ${guestLine(r)}${SITE_URL ? "\n🔗 " + SITE_URL : ""}\n\n– Maha Yadavalli. Reply STOP to opt out.`,
 };
+
+// Wedding reception texts (reception.html → receptionRsvps)
+const REC_URL = SITE_URL ? SITE_URL + "/reception.html" : "";
+Object.assign(TEXTS, {
+  recConfirmYes: (r) =>
+    `✨ Thank you, ${first(r.name)}! Your RSVP is confirmed for ${guestLine(r)} 💙\n\nSai Keerthana & Michael's Wedding Reception\n📅 Sat, Nov 7 · 6:00 PM\n📍 Phase Events, Alpharetta GA\n👗 Dress code: Indo-Western\n\nWe can't wait to celebrate with you! 🎉\n– Maha Yadavalli. Reply STOP to opt out.`,
+  recConfirmNo: (r) =>
+    `💙 RSVP received. ${first(r.name)}, your response for Sai Keerthana & Michael's Wedding Reception (Nov 7) is recorded as "Unable to attend". To change it, RSVP again at ${REC_URL || "our invitation site"}\n– Maha Yadavalli. Reply STOP to opt out.`,
+  recReminder: (r) =>
+    `✨ See you tomorrow! ✨\n\nSai Keerthana & Michael's Wedding Reception is TOMORROW\n📅 Sat, Nov 7 · 6:00 PM\n📍 Phase Events, 12150 Morris Rd, Alpharetta GA 30005\n👗 Indo-Western\n👥 ${guestLine(r)}${REC_URL ? "\n🔗 " + REC_URL : ""}\n\n– Maha Yadavalli. Reply STOP to opt out.`,
+});
+
 function first(name) {
   return String(name || "").trim().split(/\s+/)[0].slice(0, 20) || "friend";
 }

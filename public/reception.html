@@ -222,6 +222,10 @@ fieldset{border:0;padding:0;margin:0}
 .closing .blessing{font-size:clamp(19px,5.2vw,24px);margin:0 auto 18px;padding:0}
 .closing .blessing::before,.closing .blessing::after{display:none}
 .closing .sig{margin:20px 0 8px}
+.optin{display:flex;gap:12px;align-items:flex-start;cursor:pointer;border:1px dashed var(--gold-2);border-radius:14px;padding:14px 16px;font-size:15px;line-height:1.45;font-weight:400;color:var(--ink)}
+.optin input{width:20px;height:20px;margin:2px 0 0;flex:none;accent-color:var(--navy)}
+.optin small{display:block;font-size:12.5px;color:var(--ink-soft);line-height:1.45;margin-top:4px;font-weight:300}
+.optin a{color:var(--navy)}
 @media (max-width:420px){
   .counts{grid-template-columns:1fr 1fr;gap:10px}
   .stepper button{width:34px;height:34px}
@@ -315,6 +319,11 @@ fieldset{border:0;padding:0;margin:0}
           <label for="r-phone">Mobile number <span class="hint">· one reply per number</span></label>
           <input type="tel" id="r-phone" autocomplete="tel" inputmode="tel" maxlength="30" placeholder="(404) 555-0123" required>
         </div>
+        <label class="optin" for="r-sms">
+          <input type="checkbox" id="r-sms">
+          <span><b>Text me</b> a confirmation and a reminder the day before the reception.
+          <small>By ticking this box, you agree to receive up to 3 texts from Maha Yadavalli about this wedding reception only: an RSVP confirmation and a reminder. Consent is optional. Message &amp; data rates may apply. Reply STOP to opt out, HELP for help. See our <a href="privacy.html" target="_blank">Privacy Policy</a> and <a href="terms.html" target="_blank">Terms &amp; Conditions</a>.</small></span>
+        </label>
         <fieldset>
           <div class="legend">Will you join us?</div>
           <div class="seg">
@@ -492,7 +501,7 @@ fieldset{border:0;padding:0;margin:0}
       name: name, phone: phone, attending: yes,
       adults: yes ? toInt('r-adults') : 0,
       kids: yes ? toInt('r-kids') : 0,
-      smsOptIn: false,
+      smsOptIn: $('r-sms').checked,
       submittedAt: FB.serverTimestamp()
     };
     var note = $('r-note').value.trim(); if (note) data.note = note.slice(0,1000);
@@ -508,6 +517,7 @@ fieldset{border:0;padding:0;margin:0}
       $('resMsg').textContent = yes
         ? 'We have your RSVP for ' + n + (n === 1 ? ' guest' : ' guests') + ' — Saturday, November 7 at 6:00 PM, Phase Events.'
         : 'Thank you for letting us know. Your blessings mean the world to Sai & Michael.';
+      if (data.smsOptIn) $('resMsg').textContent += ' A confirmation text is on its way' + (yes ? ', and we’ll text a reminder the day before.' : '.');
       form.hidden = true; result.hidden = false;
       try { result.scrollIntoView({behavior:'smooth', block:'center'}); } catch(_) {}
     }).catch(function(err){

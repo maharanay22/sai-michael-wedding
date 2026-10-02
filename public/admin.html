@@ -186,10 +186,16 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       COL = $(id).getAttribute('data-col');
       $('evWedding').className = 'btn' + (COL === 'rsvps' ? ' solid' : '');
       $('evReception').className = 'btn' + (COL === 'receptionRsvps' ? ' solid' : '');
-      $('remindLink').style.visibility = COL === 'rsvps' ? '' : 'hidden';
+      if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/' + (COL === 'rsvps' ? 'wedding' : 'reception') + '-reminder.yml';
       all = []; render(); load();
     });
   });
+  // Links ending in &ev=reception (or #ev=reception) open straight on the reception list.
+  if (/[#&]ev=reception/.test(location.hash || '')){
+    COL = 'receptionRsvps';
+    $('evWedding').className = 'btn'; $('evReception').className = 'btn solid';
+    if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/reception-reminder.yml';
+  }
   function load(){
     say('');
     return FB.getDocs(FB.query(FB.collection(db, COL), FB.orderBy('submittedAt', 'desc'))).then(function(snap){
