@@ -27,7 +27,7 @@ a{color:inherit}
 
 /* watercolor wash */
 .wash{position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background:
+  background:linear-gradient(rgba(251,252,254,.25),rgba(251,252,254,.45)),url(reception/plate.jpg) center/cover no-repeat,
     radial-gradient(60vmax 45vmax at 12% 8%, rgba(195,210,232,.75), transparent 60%),
     radial-gradient(50vmax 40vmax at 92% 30%, rgba(156,138,201,.18), transparent 60%),
     radial-gradient(55vmax 45vmax at 20% 85%, rgba(125,147,190,.22), transparent 60%),
@@ -162,6 +162,41 @@ fieldset{border:0;padding:0;margin:0}
   @keyframes mpulse{0%{box-shadow:0 0 0 0 rgba(125,147,190,.6)}100%{box-shadow:0 0 0 14px rgba(125,147,190,0)}}
 }
 
+/* ---------- grandeur layer ---------- */
+:root{--gold:#B8955A;--gold-2:#D9BF8C}
+.hero,.closing,.framed{position:relative;isolation:isolate}
+.hero::before,.closing::before,.framed::before{content:"";position:absolute;z-index:-1;top:0;bottom:0;left:50%;transform:translateX(-50%);height:100%;aspect-ratio:9/16;max-width:100%;
+  background:url(reception/frame.jpg) center/cover no-repeat;
+  -webkit-mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent);mask-image:linear-gradient(to right,transparent,#000 6%,#000 94%,transparent)}
+@media (max-aspect-ratio:9/16){.hero::before,.closing::before,.framed::before{-webkit-mask-image:none;mask-image:none}}
+.hero .wrap{max-width:420px}
+.hero .big-title{font-size:clamp(34px,9.6vw,46px)}
+.ornament{display:block;width:150px;height:auto;margin:14px auto;color:var(--gold)}
+.big-title{background:linear-gradient(100deg,var(--navy) 0%,#3C5590 45%,var(--navy) 60%,var(--navy) 100%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 7s ease-in-out infinite}
+@keyframes sheen{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.hosts{color:var(--navy)}
+.arch{outline:1px solid var(--gold-2);outline-offset:-12px;box-shadow:0 0 0 6px rgba(255,255,255,.7),0 0 0 7px var(--gold-2),0 40px 70px -28px rgba(22,36,74,.55)}
+.roses{display:block;width:min(100%,520px);height:auto;margin:18px auto -40px;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(transparent,#000 22%);mask-image:linear-gradient(transparent,#000 30%)}
+.message,.blessing{position:relative;padding:34px 8px}
+.framed .wrap{max-width:330px}
+.framed .message{font-size:clamp(22px,6vw,28px)}
+.framed .blessing{font-size:clamp(24px,6.6vw,32px)}
+.message::before,.message::after,.blessing::before,.blessing::after{content:"";display:block;width:120px;height:14px;margin:0 auto 22px;background:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 14'%3E%3Cpath d='M0 7h48M72 7h48' stroke='%23B8955A' stroke-width='.8'/%3E%3Cpath d='M60 1l6 6-6 6-6-6z' fill='none' stroke='%23B8955A' stroke-width='.9'/%3E%3Ccircle cx='60' cy='7' r='1.4' fill='%23B8955A'/%3E%3C/svg%3E") center/contain no-repeat}
+.message::after,.blessing::after{margin:22px auto 0}
+.band{background:radial-gradient(120% 80% at 50% 0%,#24396E 0%,var(--navy) 55%,#0F1A38 100%)}
+.band::after{content:"";position:absolute;inset:14px;border:1px solid rgba(217,191,140,.45);border-radius:6px;pointer-events:none}
+.band .eyebrow,.countdown small{color:var(--gold-2)}
+.date-block .side{border-color:rgba(217,191,140,.55)}
+.card{position:relative;background:rgba(255,255,255,.8)}
+.card::after{content:"";position:absolute;inset:8px;border:1px solid rgba(184,149,90,.35);border-radius:16px;pointer-events:none}
+.card .eyebrow{color:var(--gold)}
+.rsvp{position:relative;overflow:hidden;padding-top:120px;border-color:rgba(184,149,90,.35)}
+.rsvp::before{content:"";position:absolute;left:0;right:0;top:0;height:150px;background:url(reception/frame.jpg) center top/100% auto no-repeat;mix-blend-mode:multiply;-webkit-mask-image:linear-gradient(#000 55%,transparent);mask-image:linear-gradient(#000 55%,transparent);pointer-events:none}
+.closing{min-height:100svh;display:flex;flex-direction:column;justify-content:center}
+.closing .eyebrow{color:var(--gold)}
+/* falling petals */
+#petals{position:fixed;inset:0;pointer-events:none;z-index:5}
+@media (prefers-reduced-motion:reduce){#petals{display:none}.big-title{animation:none}}
 @media (max-width:420px){
   .counts{grid-template-columns:1fr 1fr;gap:10px}
   .stepper button{width:34px;height:34px}
@@ -170,15 +205,18 @@ fieldset{border:0;padding:0;margin:0}
 </head>
 <body>
 <div class="wash" aria-hidden="true"></div>
+<canvas id="petals" aria-hidden="true"></canvas>
 <a class="top-cta" href="#rsvp" id="topCta">RSVP</a>
 
 <main>
   <!-- 1 — Opening -->
-  <section class="screen" aria-label="Invitation">
+  <section class="screen hero" aria-label="Invitation">
     <div class="wrap">
       <div class="hosts rv">Mr. &amp; Mrs. Karothu<span class="amp">&amp;</span>Mr. &amp; Mrs. Dr. Razzano</div>
+      <svg class="ornament rv" viewBox="0 0 150 20" aria-hidden="true"><path d="M0 10h55M95 10h55" stroke="currentColor" stroke-width=".8"/><path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor"/><circle cx="75" cy="10" r="2" fill="currentColor"/><circle cx="60" cy="10" r="1.3" fill="currentColor"/><circle cx="90" cy="10" r="1.3" fill="currentColor"/></svg>
       <p class="invite-line rv">cordially invite you to the</p>
       <h1 class="big-title rv">Wedding<br>Reception</h1>
+      <svg class="ornament rv" viewBox="0 0 150 20" aria-hidden="true"><path d="M0 10h55M95 10h55" stroke="currentColor" stroke-width=".8"/><path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor"/><circle cx="75" cy="10" r="2" fill="currentColor"/><circle cx="60" cy="10" r="1.3" fill="currentColor"/><circle cx="90" cy="10" r="1.3" fill="currentColor"/></svg>
     </div>
     <a class="scroll-cue" href="#couple">Scroll<i></i></a>
   </section>
@@ -189,11 +227,12 @@ fieldset{border:0;padding:0;margin:0}
       <div class="arch rv"><img src="reception/couple.jpg" alt="Sai Keerthana and Michael" width="720" height="839"></div>
       <div class="eyebrow rv">Celebrating the marriage of</div>
       <h2 class="names rv">Sai Keerthana Karothu<span class="and">&amp;</span>Michael Vincent <span style="white-space:nowrap">Razzano Jr.</span></h2>
+      <img class="roses rv" src="reception/roses.jpg" alt="" aria-hidden="true" width="1080" height="390">
     </div>
   </section>
 
   <!-- 3 — Celebration message -->
-  <section class="screen short" aria-label="Message">
+  <section class="screen framed" aria-label="Message">
     <div class="wrap">
       <p class="message rv">Please join us for an evening of <em>joy, togetherness &amp; celebration</em> as we honor the newlyweds and the beginning of their beautiful journey together.</p>
     </div>
@@ -247,7 +286,7 @@ fieldset{border:0;padding:0;margin:0}
   </section>
 
   <!-- 8 — Blessings -->
-  <section class="screen short" aria-label="Blessings">
+  <section class="screen framed" aria-label="Blessings">
     <div class="wrap">
       <p class="blessing rv">Your presence and blessings will make this celebration<span>truly special</span></p>
     </div>
@@ -317,6 +356,7 @@ fieldset{border:0;padding:0;margin:0}
   <footer class="closing" aria-label="With love">
     <div class="eyebrow rv">With love</div>
     <div class="families rv">The Karothu &amp; Dr. Razzano Families</div>
+    <svg class="ornament rv" viewBox="0 0 150 20" aria-hidden="true"><path d="M0 10h55M95 10h55" stroke="currentColor" stroke-width=".8"/><path d="M75 2l8 8-8 8-8-8z" fill="none" stroke="currentColor"/><circle cx="75" cy="10" r="2" fill="currentColor"/><circle cx="60" cy="10" r="1.3" fill="currentColor"/><circle cx="90" cy="10" r="1.3" fill="currentColor"/></svg>
     <div class="sig rv">Sai &amp; Michael</div>
     <div class="date rv">11 • 07 • 2026</div>
   </footer>
@@ -505,6 +545,32 @@ fieldset{border:0;padding:0;margin:0}
     v.addEventListener('pause', back); v.addEventListener('ended', back);
   }
   document.addEventListener('visibilitychange', function(){ if (document.hidden){ if (!a.paused){ a.pause(); a._hidden = true; } } else if (a._hidden && wanted){ a._hidden = false; tryPlay(); } });
+})();
+</script>
+<script>
+/* Soft falling petals (white, ice-blue, lilac) — skipped when the guest prefers reduced motion. */
+(function(){
+  if (window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  var c = document.getElementById('petals'), x = c.getContext('2d'), W, H, dpr = Math.min(2, window.devicePixelRatio || 1);
+  function size(){ W = c.width = innerWidth * dpr; H = c.height = innerHeight * dpr; c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px'; }
+  size(); addEventListener('resize', size);
+  var cols = ['255,255,255','214,226,244','190,206,234','206,196,232'];
+  var N = innerWidth < 600 ? 14 : 22, P = [];
+  function mk(top){ return {x:Math.random()*W, y: top ? -20*dpr : Math.random()*H, r:(5+Math.random()*7)*dpr, vy:(.35+Math.random()*.6)*dpr, sw:Math.random()*6.28, sp:.008+Math.random()*.014, rot:Math.random()*6.28, vr:(Math.random()-.5)*.03, c:cols[Math.floor(Math.random()*cols.length)], a:.55+Math.random()*.4}; }
+  for (var i=0;i<N;i++) P.push(mk(false));
+  function draw(p){
+    x.save(); x.translate(p.x, p.y); x.rotate(p.rot);
+    x.fillStyle = 'rgba(' + p.c + ',' + p.a + ')'; x.strokeStyle = 'rgba(125,147,190,' + (p.a*.35) + ')'; x.lineWidth = dpr*.6;
+    x.beginPath(); x.moveTo(0,-p.r); x.bezierCurveTo(p.r*.9,-p.r*.6,p.r*.7,p.r*.7,0,p.r); x.bezierCurveTo(-p.r*.7,p.r*.7,-p.r*.9,-p.r*.6,0,-p.r); x.fill(); x.stroke(); x.restore();
+  }
+  var run = true; document.addEventListener('visibilitychange', function(){ run = !document.hidden; if (run) requestAnimationFrame(loop); });
+  function loop(){
+    if (!run) return;
+    x.clearRect(0,0,W,H);
+    for (var i=0;i<P.length;i++){ var p = P[i]; p.sw += p.sp; p.y += p.vy; p.x += Math.sin(p.sw)*.6*dpr; p.rot += p.vr; if (p.y > H + 20*dpr) P[i] = mk(true); draw(p); }
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
 })();
 </script>
 <script src="js/config.js"></script>
