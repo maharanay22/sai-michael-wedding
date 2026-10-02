@@ -83,6 +83,10 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   </section>
 
   <section id="dash2" hidden style="display:flex;flex-direction:column;gap:12px">
+    <div class="tools" role="tablist" aria-label="Which event">
+      <button class="btn solid" type="button" id="evWedding" data-col="rsvps">Wedding · Nov 6</button>
+      <button class="btn" type="button" id="evReception" data-col="receptionRsvps">Reception · Nov 7</button>
+    </div>
     <div class="tools">
       <input type="search" id="filter" placeholder="Search name or phone" aria-label="Search RSVPs">
       <button class="btn" type="button" id="refreshBtn">Refresh</button>
@@ -165,7 +169,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   function removeRsvp(r, btn){
     if (!confirm('Delete the RSVP from "' + (r.name || 'this guest') + '" (' + pretty(r.phone) + ')?\n\nThis cannot be undone.')) return;
     btn.disabled = true; btn.textContent = 'Deleting…';
-    FB.deleteDoc(FB.doc(db, 'rsvps', r.id)).then(function(){
+    FB.deleteDoc(FB.doc(db, COL, r.id)).then(function(){
       all = all.filter(function(x){ return x.id !== r.id; });
       render(); say('Deleted the RSVP from ' + (r.name || 'guest') + '.');
     }).catch(function(e){
@@ -175,9 +179,20 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   }
 
   function say(t, bad){ $('toolMsg').className = bad ? 'msg bad' : 'msg'; $('toolMsg').textContent = t; }
+  // Wedding and reception RSVPs live in separate lists; these buttons switch between them.
+  var COL = 'rsvps';
+  ['evWedding','evReception'].forEach(function(id){
+    $(id).addEventListener('click', function(){
+      COL = $(id).getAttribute('data-col');
+      $('evWedding').className = 'btn' + (COL === 'rsvps' ? ' solid' : '');
+      $('evReception').className = 'btn' + (COL === 'receptionRsvps' ? ' solid' : '');
+      $('remindLink').style.visibility = COL === 'rsvps' ? '' : 'hidden';
+      all = []; render(); load();
+    });
+  });
   function load(){
     say('');
-    return FB.getDocs(FB.query(FB.collection(db, 'rsvps'), FB.orderBy('submittedAt', 'desc'))).then(function(snap){
+    return FB.getDocs(FB.query(FB.collection(db, COL), FB.orderBy('submittedAt', 'desc'))).then(function(snap){
       all = snap.docs.map(function(d){ var o = d.data(); o.id = d.id; return o; });
       render();
     }).catch(function(e){
@@ -195,7 +210,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
       return [r.name, pretty(r.phone), r.attending ? 'Yes' : 'No', r.attending ? r.adults : 0, r.attending ? r.kids : 0, r.smsOptIn ? 'Yes' : 'No', r.note, fmt(r.submittedAt)].map(csvCell).join(',');
     }));
     var blob = new Blob(['﻿' + lines.join('\r\n')], {type:'text/csv;charset=utf-8'});
-    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'sai-michael-rsvps.csv';
+    var a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = COL === 'rsvps' ? 'sai-michael-wedding-rsvps.csv' : 'sai-michael-reception-rsvps.csv';
     document.body.appendChild(a); a.click(); setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1000);
   });
 
