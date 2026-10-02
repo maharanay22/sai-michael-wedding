@@ -47,7 +47,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 .msg{font-size:15px}
 .msg.bad{color:var(--kumkuma)}
 .confirm p{margin:0 0 10px}
-.viewer .rm,.viewer #remindLink{display:none}
+.viewer .rm,.viewer #remindLink{display:none!important}
 .del{-webkit-appearance:none;appearance:none;font:inherit;font-size:14px;padding:4px 12px;border-radius:999px;border:1.5px solid #A3122A;background:#fff;color:#A3122A;cursor:pointer;white-space:nowrap}
 .del:hover{background:#A3122A;color:#fff}.del[disabled]{opacity:.6;cursor:progress}
 .wa{display:inline-block;padding:4px 12px;border-radius:999px;background:#1F7A3F;color:#fff;text-decoration:none;font-size:14px;white-space:nowrap}
@@ -56,8 +56,8 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
 <body>
 <header>
   <div>
-    <h1>RSVP Register</h1>
-    <div class="te">కరోతు వారి వివాహం · 6 November 2026</div>
+    <h1 id="evTitle">RSVP Register · Wedding</h1>
+    <div class="te" id="evSub">కరోతు వారి వివాహం · 6 November 2026</div>
   </div>
   <div class="tools" id="who" hidden>
     <span id="whoEmail"></span>
@@ -123,6 +123,7 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   function td(text, cls){ var c = document.createElement('td'); if (cls) c.className = cls; c.textContent = text == null ? '' : String(text); return c; }
   function guestLine(r){ var a = r.adults||0, k = r.kids||0; var t = a + ' adult' + (a===1?'':'s'); if (k) t += ' and ' + k + ' child' + (k===1?'':'ren'); return t; }
   function waText(r){
+    if (COL === 'receptionRsvps') return 'Hi ' + r.name + ' 💙\nA gentle reminder: Sai Keerthana & Michael\'s Wedding Reception is tomorrow, Saturday 7 November 2026 at 6:00 PM, Phase Events, 12150 Morris Rd, Alpharetta, GA 30005. Dress code: Indo-Western.\nWe have you down for ' + guestLine(r) + '. See you there!\n– Karothu & Dr. Razzano families';
     return 'Namaskaram ' + r.name + ' garu 🙏\nA gentle reminder: Sai Keerthana & Michael\'s wedding is tomorrow, Friday 6 November 2026 at 6:00 PM, Hindu Temple of Atlanta, 5851 Georgia Hwy 85, Riverdale, GA 30274.\nWe have you down for ' + guestLine(r) + '. See you there!\n– Karothu family';
   }
   function textStatus(r){
@@ -181,21 +182,27 @@ td.num{text-align:right;font-variant-numeric:tabular-nums}
   function say(t, bad){ $('toolMsg').className = bad ? 'msg bad' : 'msg'; $('toolMsg').textContent = t; }
   // Wedding and reception RSVPs live in separate lists; these buttons switch between them.
   var COL = 'rsvps';
+  // Show which event's list is on screen: buttons, page heading and the reminders link.
+  function showEvent(){
+    var rec = COL === 'receptionRsvps';
+    $('evWedding').className = 'btn' + (rec ? '' : ' solid');
+    $('evReception').className = 'btn' + (rec ? ' solid' : '');
+    $('evTitle').textContent = 'RSVP Register · ' + (rec ? 'Reception' : 'Wedding');
+    $('evSub').textContent = rec ? 'Wedding Reception · Saturday, 7 November 2026 · Phase Events' : 'కరోతు వారి వివాహం · 6 November 2026';
+    document.title = (rec ? 'Reception' : 'Wedding') + ' RSVPs · Sai & Michael';
+    if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/' + (rec ? 'reception' : 'wedding') + '-reminder.yml';
+  }
   ['evWedding','evReception'].forEach(function(id){
     $(id).addEventListener('click', function(){
-      COL = $(id).getAttribute('data-col');
-      $('evWedding').className = 'btn' + (COL === 'rsvps' ? ' solid' : '');
-      $('evReception').className = 'btn' + (COL === 'receptionRsvps' ? ' solid' : '');
-      if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/' + (COL === 'rsvps' ? 'wedding' : 'reception') + '-reminder.yml';
+      COL = $(id).getAttribute('data-col'); showEvent();
       all = []; render(); load();
     });
   });
-  // Links ending in &ev=reception (or #ev=reception) open straight on the reception list.
-  if (/[#&]ev=reception/.test(location.hash || '')){
-    COL = 'receptionRsvps';
-    $('evWedding').className = 'btn'; $('evReception').className = 'btn solid';
-    if (window.GITHUB_REPO) $('remindLink').href = 'https://github.com/' + window.GITHUB_REPO + '/actions/workflows/reception-reminder.yml';
-  }
+  // admin.html?ev=reception (or ...#...&ev=reception) opens straight on the reception list.
+  if (/[?&]ev=reception/.test(location.search || '') || /[#&]ev=reception/.test(location.hash || '')) COL = 'receptionRsvps';
+  showEvent();
+  // Pasting a different link into an open tab only changes the part after "#"; reload so it takes effect.
+  window.addEventListener('hashchange', function(){ location.reload(); });
   function load(){
     say('');
     return FB.getDocs(FB.query(FB.collection(db, COL), FB.orderBy('submittedAt', 'desc'))).then(function(snap){
