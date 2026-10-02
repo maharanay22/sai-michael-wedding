@@ -1,35 +1,36 @@
-name: RSVP confirmation texts
+name: Reception reminder texts
 
 on:
   schedule:
-           # Every 5 minutes from about 8 AM to midnight Eastern (times are UTC).
-       - cron: "*/5 0-3,12-23 * * *"
+    # Friday 6 Nov 2026, 16:00 UTC = 11:00 AM Eastern (EST), the day before the reception (Sat 7 Nov).
+    # GitHub can start scheduled runs a few minutes late.
+    - cron: "0 16 6 11 *"
   workflow_dispatch:
     inputs:
       dry_run:
         description: "Only list who would be texted (send nothing)"
         type: boolean
         default: true
-
-concurrency:
-  group: text-confirmations
-  cancel-in-progress: false
+      test_phone:
+        description: "Send ONE sample reminder to this number only, e.g. +14045550123 (leave empty for the real run)"
+        type: string
+        default: ""
 
 jobs:
-  text:
+  remind:
     runs-on: ubuntu-latest
     steps:
-      - name: Stop after the wedding
+      - name: Only in 2026
         id: gate
         run: |
-          if [ "$(date -u +%Y%m%d)" -le "20261107" ]; then echo "go=yes" >> "$GITHUB_OUTPUT"; else echo "The wedding and reception are over. Disable this workflow in the Actions tab."; fi
+          if [ "$(date -u +%Y)" = "2026" ] || [ "${{ github.event_name }}" = "workflow_dispatch" ]; then echo "go=yes" >> "$GITHUB_OUTPUT"; fi
       - uses: actions/checkout@v4
         if: steps.gate.outputs.go == 'yes'
       - uses: actions/setup-node@v4
         if: steps.gate.outputs.go == 'yes'
         with:
           node-version: 22
-      - name: Send confirmation texts
+      - name: Send reminder texts
         if: steps.gate.outputs.go == 'yes'
         working-directory: notify
         env:
@@ -39,8 +40,9 @@ jobs:
           TWILIO_AUTH_TOKEN: ${{ secrets.TWILIO_AUTH_TOKEN }}
           TWILIO_FROM: ${{ secrets.TWILIO_FROM }}
           TWILIO_MESSAGING_SERVICE_SID: ${{ secrets.TWILIO_MESSAGING_SERVICE_SID }}
-          MAX_CONFIRMATION_TEXTS: ${{ vars.MAX_CONFIRMATION_TEXTS || '300' }}
           DRY_RUN: ${{ github.event_name == 'workflow_dispatch' && inputs.dry_run || false }}
+          TEST_PHONE: ${{ github.event_name == 'workflow_dispatch' && inputs.test_phone || '' }}
+          EVENT: reception
         run: |
           npm install --no-audit --no-fund
-          node send-text-confirmations.mjs
+          node send-reminders.mjs
