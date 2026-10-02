@@ -247,7 +247,7 @@ fieldset{border:0;padding:0;margin:0}
         <div class="day">07</div>
         <div class="side">November</div>
       </div>
-      <div class="date-sub rv">2026 &nbsp;·&nbsp; six o’clock in the evening</div>
+      <div class="date-sub rv">2026 &nbsp;·&nbsp; 6:00 PM</div>
       <div class="countdown rv" id="countdown" aria-live="off">
         <div><b id="cd-d">–</b><small>Days</small></div>
         <div><b id="cd-h">–</b><small>Hours</small></div>
@@ -366,7 +366,6 @@ fieldset{border:0;padding:0;margin:0}
 <audio id="bgMusic" src="reception/music.mp3?v=1" preload="auto" loop playsinline></audio>
 <button type="button" class="music-btn on" id="musicBtn" aria-label="Mute music" aria-pressed="true">
   <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 18.5a2.5 2.5 0 1 1-2-2.45V5.5l11-2.5v11.5a2.5 2.5 0 1 1-2-2.45V7.3L9 8.9z" fill="currentColor"/><path class="slash" d="M3 3 21 21" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-  <span class="music-hint" id="musicHint">Tap for music</span>
 </button>
 
 <dialog id="vid" aria-label="Invitation video">
@@ -517,7 +516,7 @@ fieldset{border:0;padding:0;margin:0}
    so we try right away and otherwise start on the first touch anywhere. The button mutes/unmutes.
    It pauses while the invitation video plays and when the tab is hidden. */
 (function(){
-  var a = document.getElementById('bgMusic'), b = document.getElementById('musicBtn'), hint = document.getElementById('musicHint');
+  var a = document.getElementById('bgMusic'), b = document.getElementById('musicBtn');
   var v = document.getElementById('vidEl');
   if (!a || !b) return;
   a.volume = 0.55;
@@ -525,14 +524,12 @@ fieldset{border:0;padding:0;margin:0}
   function show(){ b.classList.toggle('on', wanted); b.setAttribute('aria-pressed', wanted ? 'true' : 'false'); b.setAttribute('aria-label', wanted ? 'Mute music' : 'Play music'); }
   function tryPlay(){ if (!wanted || (v && !v.paused)) return; var pr = a.play(); if (pr && pr.catch) pr.catch(function(){}); }
   show(); tryPlay();
-  a.addEventListener('playing', function(){ hint.classList.add('gone'); });
-  setTimeout(function(){ if (wanted && a.paused) hint.classList.add('need'); }, 1800);
   b.addEventListener('click', function(e){
     e.stopPropagation();
     if (wanted && !a.paused){ wanted = false; a.pause(); } else { wanted = true; tryPlay(); }
     show();
   });
-  var evs = ['pointerup','touchend','click','keydown'];
+  var evs = ['pointerdown','mousedown','pointerup','touchend','click','keydown'];
   function kick(e){
     if (e.target && e.target.closest && (e.target.closest('#musicBtn') || e.target.closest('#playBtn'))) return;
     if (wanted && a.paused) tryPlay();
