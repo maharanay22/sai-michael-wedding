@@ -13,11 +13,15 @@ const EVENTS = [
   { label: "wedding", collection: "rsvps", yes: TEXTS.confirmYes, no: TEXTS.confirmNo, mediaYes: MEDIA.confirmYes, mediaNo: MEDIA.confirmNo },
   { label: "reception", collection: "receptionRsvps", yes: TEXTS.recConfirmYes, no: TEXTS.recConfirmNo, mediaYes: MEDIA.recConfirmYes, mediaNo: MEDIA.recConfirmNo },
 ];
-const lists = [];
-for (const ev of EVENTS) {
-  const snap = await firestore().collection(ev.collection).where("smsOptIn", "==", true).get();
-  lists.push({ ev, docs: snap.docs.map((d) => ({ ref: d.ref, id: d.id, r: d.data() })) });
-}
+   const LOOKBACK_DAYS = Number(process.env.LOOKBACK_DAYS || 3);
+   const since = new Date(Date.now() - LOOKBACK_DAYS * 24 * 60 * 60 * 1000);
+   const lists = [];
+   for (const ev of EVENTS) {
+     // Only recent replies (submittedAt is set every time a guest sends or changes an RSVP).
+     const snap = await firestore().collection(ev.collection).where("submittedAt", ">=", since).get();
+     const docs = snap.docs.map((d) => ({ ref: d.ref, id: d.id, r: d.data() })).filter((x) => x.r.smsOptIn === true);
+     lists.push({ ev, docs });
+   }
 // One shared safety cap across both events.
 let budget = MAX_TEXTS - lists.reduce((n, l) => n + l.docs.filter((x) => x.r.smsConfirmationSentAt).length, 0);
 let sent = 0, skipped = 0, failed = 0, opted = 0;
